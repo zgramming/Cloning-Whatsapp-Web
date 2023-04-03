@@ -1,3 +1,4 @@
+import DrawerCustom from '../DrawerCustom';
 import ChatListArchiveAction from './ChatListArchiveAction';
 import ChatListHeader from './ChatListHeader';
 import ChatListItem from './ChatListItem';
@@ -5,7 +6,8 @@ import ChatListSearch from './ChatListSearch';
 
 const ChatList = () => {
   return (
-    <div className="basis-[30%] flex flex-col">
+    <div className="relative basis-[30%] flex flex-col">
+      <DrawerCustom />
       <ChatListHeader />
       <ChatListSearch />
       <div className="overflow-auto flex flex-col">

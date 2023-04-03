@@ -1,9 +1,13 @@
+import axios from 'axios';
+import { removeCookies, setCookie } from 'cookies-next';
+
 import { LoginDTO } from '@/interface/dto/login.dto';
 import { RegisterDTO } from '@/interface/dto/register.dto';
 import { LoginResponseInterface } from '@/interface/login-response.interface';
 import RegisterResponseInterface from '@/interface/register-response.interface';
-import axios from 'axios';
-import { BASE_URL_API } from './constant';
+import { UserResponseInterface } from '@/interface/user.interface';
+
+import { BASE_URL_API, KEY_COOKIES_LOGIN, KEY_COOKIES_USER } from './constant';
 
 class API {
   static async register(value: RegisterDTO) {
@@ -15,7 +19,38 @@ class API {
   static async login(value: LoginDTO) {
     const { data } = await axios.post(`${BASE_URL_API}/login`, value);
     const result: LoginResponseInterface = data;
+
+    const { data: user } = await API.me(result.data.id);
+
+    setCookie(KEY_COOKIES_USER, JSON.stringify(user), {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
+    setCookie(KEY_COOKIES_LOGIN, result.token, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
     return result;
+  }
+
+  static async me(id: string) {
+    const { data } = await axios.get(`${BASE_URL_API}/user/${id}`);
+    const result: UserResponseInterface = data;
+    return result;
+  }
+
+  static logout() {
+    removeCookies(KEY_COOKIES_USER, {
+      path: '/',
+      maxAge: 0,
+    });
+
+    removeCookies(KEY_COOKIES_LOGIN, {
+      path: '/',
+      maxAge: 0,
+    });
   }
 }
 

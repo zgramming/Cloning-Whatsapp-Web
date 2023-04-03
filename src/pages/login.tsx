@@ -1,20 +1,20 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useContext, useState } from 'react';
 
+import { AuthContext } from '@/context/AuthContext';
+import API from '@/utils/api';
+import { errorHandler } from '@/utils/error-handler';
+import { routes } from '@/utils/routes';
 import { Button, Card, LoadingOverlay, PasswordInput, TextInput } from '@mantine/core';
 import { isNotEmpty, matches, useForm } from '@mantine/form';
-import { useRouter } from 'next/router';
-import { routes } from '@/utils/routes';
-import { useState } from 'react';
-import { errorHandler } from '@/utils/error-handler';
-import API from '@/utils/api';
 import { notifications } from '@mantine/notifications';
-import { setCookie } from 'cookies-next';
-import { KEY_COOKIES_LOGIN } from '@/utils/constant';
 
 type FormType = {
   phone: string;
   password: string;
 };
+
 const initialValues: FormType = {
   phone: '',
   password: '',
@@ -22,6 +22,7 @@ const initialValues: FormType = {
 
 const Page = () => {
   const { push } = useRouter();
+  const { setUser } = useContext(AuthContext);
   const [isLoading, setLoading] = useState(false);
 
   const form = useForm({
@@ -47,11 +48,6 @@ const Page = () => {
         title: 'Success',
         message: result.message,
         color: 'green',
-      });
-
-      setCookie(KEY_COOKIES_LOGIN, result.token, {
-        path: '/',
-        maxAge: 60 * 60 * 24 * 7,
       });
 
       push(routes.home);

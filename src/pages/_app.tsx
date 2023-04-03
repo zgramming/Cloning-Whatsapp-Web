@@ -36,7 +36,6 @@ export default function App({ Component, pageProps }: AppProps) {
     >
       <RouteTransition />
       <Notifications position="top-right" />
-
       <AuthProvider>
         <SelectedChatListProvider>
           <Component {...pageProps} />

@@ -1,29 +1,23 @@
 import { createContext, useState } from 'react';
 
-interface User {
-  id: number;
-  name: string;
-}
+import { UserInterface } from '@/interface/user.interface';
 
 type ContextType = {
-  user: User | null;
-  setUser: (val: User | null) => void;
+  user: UserInterface | undefined;
+  setUser: (val: UserInterface | undefined) => void;
 };
 
 const defaultValue: ContextType = {
-  user: null,
+  user: undefined,
   setUser: (val) => {},
 };
 
 export const AuthContext = createContext(defaultValue);
 
 const AuthProvider = ({ children }: any) => {
-  const [user, setUser] = useState<User | null>({
-    id: 1,
-    name: 'Zeffry Reynando',
-  });
+  const [user, setUser] = useState<UserInterface | undefined>();
 
-  const onUserHandler = (val: User | null) => {
+  const onUserHandler = (val: UserInterface | undefined) => {
     setUser(val);
   };
 
