@@ -5,6 +5,7 @@ type ContextType = {
   latestNode?: ReactNode;
   push: (val: ReactNode) => void;
   pop: () => void;
+  popAll: () => void;
 };
 
 const defaultValue: ContextType = {
@@ -12,6 +13,7 @@ const defaultValue: ContextType = {
   latestNode: undefined,
   push: (val) => {},
   pop: () => {},
+  popAll: () => {},
 };
 
 export const DrawerNavigationStackContext = createContext(defaultValue);
@@ -38,8 +40,15 @@ const DrawerNavigationStackProvider = ({ children }: any) => {
     });
   };
 
+  const onPopAllHandler = () => {
+    setNodes([]);
+    setLatestNode(undefined);
+  };
+
   return (
-    <DrawerNavigationStackContext.Provider value={{ nodes, push: onPushHandler, pop: onPopHandler, latestNode }}>
+    <DrawerNavigationStackContext.Provider
+      value={{ nodes, push: onPushHandler, pop: onPopHandler, popAll: onPopAllHandler, latestNode }}
+    >
       {children}
     </DrawerNavigationStackContext.Provider>
   );
