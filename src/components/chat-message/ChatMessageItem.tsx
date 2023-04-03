@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 
 import { AuthContext } from '@/context/AuthContext';
-import { MessageInterface } from '@/interface/MessageInterface';
+import { MessageInterface } from '@/interface/message.interface';
 
 const ChatMessageItem = ({ message }: { message: MessageInterface }) => {
   const { user } = useContext(AuthContext);

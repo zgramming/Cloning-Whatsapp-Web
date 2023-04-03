@@ -6,6 +6,7 @@ import SelectedChatListProvider from '@/context/SelectedChatListContext';
 import { MantineProvider } from '@mantine/core';
 
 import type { AppProps } from 'next/app';
+import { Notifications } from '@mantine/notifications';
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <MantineProvider
@@ -34,6 +35,8 @@ export default function App({ Component, pageProps }: AppProps) {
       withNormalizeCSS
     >
       <RouteTransition />
+      <Notifications position="top-right" />
+
       <AuthProvider>
         <SelectedChatListProvider>
           <Component {...pageProps} />

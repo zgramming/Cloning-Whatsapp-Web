@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
-import { MessageInterface } from '@/interface/MessageInterface';
+import { MessageInterface } from '@/interface/message.interface';
 
 import ChatMessageHeader from './ChatMessageHeader';
 import ChatMessageInput from './ChatMessageInput';
