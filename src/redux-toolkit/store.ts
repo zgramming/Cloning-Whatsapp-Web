@@ -1,14 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { groupSlice } from './feature/group/group.slice';
 
-import { messageSlice } from './feature/message/message.slice';
-import { userFilteredPhoneSlice } from './feature/user/user-filtered-phone.slice';
+import groupSlice from './feature/group/group.slice';
+import messageSlice from './feature/message/message.slice';
+import userFilteredPhoneSlice from './feature/user/user-filtered-phone.slice';
 
 export const store = configureStore({
   reducer: {
-    group: groupSlice.reducer,
-    message: messageSlice.reducer,
-    userFilteredPhone: userFilteredPhoneSlice.reducer,
+    group: groupSlice,
+    message: messageSlice,
+    userFilteredPhone: userFilteredPhoneSlice,
   },
 });
 

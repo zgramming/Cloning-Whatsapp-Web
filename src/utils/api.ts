@@ -3,12 +3,13 @@ import { getCookie, removeCookies, setCookie } from 'cookies-next';
 
 import { LoginDTO } from '@/interface/dto/login.dto';
 import { RegisterDTO } from '@/interface/dto/register.dto';
+import { GroupPrivateCreateResponseInterface } from '@/interface/group/group-private-create-response.interface';
+import { MyGroupInterface } from '@/interface/group/my-group.response.interface';
 import { LoginResponseInterface } from '@/interface/login-response.interface';
+import { MessageInterface } from '@/interface/message/message.interface';
 import RegisterResponseInterface from '@/interface/register-response.interface';
 import { UserResponseInterface } from '@/interface/user/user.interface';
 
-import { MyGroupInterface } from '@/interface/group/my-group.response.interface';
-import { MessageInterface } from '@/interface/message/message.interface';
 import { BASE_URL_API, KEY_COOKIES_LOGIN, KEY_COOKIES_USER } from './constant';
 
 const bearerHeader = () => {
@@ -80,6 +81,18 @@ class API {
       ...bearerHeader(),
     });
     const result: MyGroupInterface = data;
+    return result;
+  }
+
+  static async createPrivateGroup(userId: string) {
+    const { data } = await axios.post(
+      `${BASE_URL_API}/group/private`,
+      { userId },
+      {
+        ...bearerHeader(),
+      },
+    );
+    const result: GroupPrivateCreateResponseInterface = data;
     return result;
   }
 

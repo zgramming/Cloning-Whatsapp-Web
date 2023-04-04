@@ -1,15 +1,25 @@
-import { TextInput, Loader, Avatar } from '@mantine/core';
+import { useContext, useEffect, useState } from 'react';
+
+import { Avatar, Loader, LoadingOverlay, TextInput } from '@mantine/core';
 import { useDebouncedState } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconSearch } from '@tabler/icons-react';
-import { useState, useEffect } from 'react';
-import { useAppSelector, useAppDispatch } from '@/hooks/use-dispatch-selector';
-import { asyncUserByPhone } from '@/redux-toolkit/feature/user/user-filtered-phone.slice';
+import { DrawerNavigationStackContext } from '@/context/DrawerNavigationStackContext';
+import { SelectedChatListContext } from '@/context/SelectedChatListContext';
+import { useAppDispatch, useAppSelector } from '@/hooks/use-dispatch-selector';
+import { asyncCreatePrivateGroup } from '@/redux-toolkit/feature/group/group.thunk';
+import { asyncUserByPhone, resetUserFilteredPhone } from '@/redux-toolkit/feature/user/user-filtered-phone.slice';
+
 import DrawerHeader from '../DrawerHeader';
 import DrawerChatTile from './DrawerChatTile';
 
 function DrawerSearchPerson() {
-  const { loading, error, user } = useAppSelector((state) => state.userFilteredPhone);
+  const { setId } = useContext(SelectedChatListContext);
+  const { popAll: closeAllStackDrawer } = useContext(DrawerNavigationStackContext);
+
+  const [onLoadingCreatePrivateGroup, setOnLoadingCreatePrivateGroup] = useState(false);
+
+  const { loading, error, response: responseOnFilteredUser } = useAppSelector((state) => state.userFilteredPhone);
 
   const [enteredPhone, setEnteredPhone] = useDebouncedState<string>('', 1000);
   const [loadingEnteredPhone, setLoadingEnteredPhone] = useState(false);
@@ -30,13 +40,18 @@ function DrawerSearchPerson() {
         });
     }
 
-    return () => {};
+    return () => {
+      /// Reset userFilteredPhone on unmount
+      dispatch(resetUserFilteredPhone());
+    };
   }, [dispatch, enteredPhone]);
 
   return (
     <div className="flex flex-col">
       <DrawerHeader title="Cari orang" />
       <div className="flex flex-col gap-5">
+        <LoadingOverlay visible={onLoadingCreatePrivateGroup} overlayBlur={2} />
+
         <div className="p-3">
           <TextInput
             defaultValue={enteredPhone}
@@ -49,11 +64,34 @@ function DrawerSearchPerson() {
             }}
           />
         </div>
-        {!loading && !error && user && (
+        {!loading && !error && responseOnFilteredUser && (
           <DrawerChatTile
             avatar={<Avatar radius="xl" size="lg" color="green" />}
-            name={user?.name}
-            onClick={() => {}}
+            name={responseOnFilteredUser.data.name}
+            onClick={async () => {
+              const { group, data: user } = responseOnFilteredUser;
+
+              /// Check if user has private group with the filtered user
+              if (!group) {
+                try {
+                  setOnLoadingCreatePrivateGroup(true);
+                  const result = await dispatch(asyncCreatePrivateGroup(user.id)).unwrap();
+                  closeAllStackDrawer();
+                  setId(result.data.id);
+                } catch (err) {
+                  notifications.show({
+                    title: 'Error',
+                    message: err as string,
+                    color: 'red',
+                  });
+                } finally {
+                  setOnLoadingCreatePrivateGroup(false);
+                }
+              } else {
+                closeAllStackDrawer();
+                setId(group.id);
+              }
+            }}
           />
         )}
       </div>

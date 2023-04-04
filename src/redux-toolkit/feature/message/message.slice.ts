@@ -25,7 +25,7 @@ export const asyncMessage = createAsyncThunk('message/asyncMessage', async (grou
   }
 });
 
-export const messageSlice = createSlice({
+const messageSlice = createSlice({
   initialState,
   name: 'message',
   reducers: {},

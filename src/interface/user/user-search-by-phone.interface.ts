@@ -1,16 +1,25 @@
 export interface UserSearchByPhoneInterface {
   message: string;
   success: boolean;
-  data: Data;
+  data: UserSearcyByPhone;
+  group?: Group;
 }
 
-interface Data {
+export interface UserSearcyByPhone {
   id: string;
   name: string;
   phone: string;
-  password: string;
   avatar: null;
-  status: string;
+}
+
+interface Group {
+  id: string;
+  name: string;
+  code: string;
+  type: string;
+  avatar: null;
+  last_msg: null;
+  last_sender: null;
   created_at: Date;
   updated_at: Date;
 }

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import { useAppDispatch, useAppSelector } from '@/hooks/use-dispatch-selector';
-import { asyncMyGroup } from '@/redux-toolkit/feature/group/group.slice';
+import { asyncMyGroup } from '@/redux-toolkit/feature/group/group.thunk';
 
 import DrawerCustom from '../DrawerCustom';
 import ChatListSkeleton from '../skeleton/ChatListSkeleton';
@@ -30,7 +30,7 @@ function ChatListItems() {
   return (
     <>
       {items.map((group) => (
-        <ChatListItem group={group} key={group.id} />
+        <ChatListItem key={group.id} group={group} />
       ))}
     </>
   );

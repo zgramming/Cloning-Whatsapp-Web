@@ -1,16 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { UserInterface, UserResponseInterface } from '@/interface/user/user.interface';
+import { UserSearchByPhoneInterface } from '@/interface/user/user-search-by-phone.interface';
 import API from '@/utils/api';
 import { errorHandler } from '@/utils/error-handler';
 
 type SliceType = {
-  user?: UserInterface;
+  response?: UserSearchByPhoneInterface;
   loading: boolean;
   error?: string;
 };
 
 const initialState: SliceType = {
-  user: undefined,
+  response: undefined,
   loading: true,
   error: undefined,
 };
@@ -29,10 +29,16 @@ export const asyncUserByPhone = createAsyncThunk(
   },
 );
 
-export const userFilteredPhoneSlice = createSlice({
+const userFilteredPhoneSlice = createSlice({
   initialState,
   name: 'userFilteredPhone',
-  reducers: {},
+  reducers: {
+    resetUserFilteredPhone: (state) => {
+      state.response = undefined;
+      state.loading = true;
+      state.error = undefined;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(asyncUserByPhone.pending, (state) => {
       state.loading = true;
@@ -40,8 +46,8 @@ export const userFilteredPhoneSlice = createSlice({
     });
     builder.addCase(asyncUserByPhone.fulfilled, (state, action) => {
       state.loading = false;
-      const item: UserResponseInterface = action.payload;
-      state.user = item.data;
+      const item: UserSearchByPhoneInterface = action.payload;
+      state.response = item;
     });
     builder.addCase(asyncUserByPhone.rejected, (state, action) => {
       state.loading = false;
@@ -49,5 +55,7 @@ export const userFilteredPhoneSlice = createSlice({
     });
   },
 });
+
+export const { resetUserFilteredPhone } = userFilteredPhoneSlice.actions;
 
 export default userFilteredPhoneSlice.reducer;

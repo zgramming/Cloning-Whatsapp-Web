@@ -1,30 +1,21 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { MyGroup, MyGroupInterface } from '@/interface/group/my-group.response.interface';
-import API from '@/utils/api';
-import { errorHandler } from '@/utils/error-handler';
+
+import { asyncMyGroup } from './group.thunk';
 
 type SliceType = {
   items: MyGroup[];
   loading: boolean;
   error?: string;
 };
+
 const initialState: SliceType = {
   items: [],
   loading: true,
   error: undefined,
 };
 
-export const asyncMyGroup = createAsyncThunk('group/myGroup', async (_, { rejectWithValue }) => {
-  try {
-    const result = await API.getMyGroup();
-    return result;
-  } catch (error) {
-    const err = errorHandler(error);
-    return rejectWithValue(err.message);
-  }
-});
-
-export const groupSlice = createSlice({
+const groupSlice = createSlice({
   initialState,
   name: 'inbox',
   reducers: {},

@@ -1,16 +1,17 @@
 export interface GroupPrivateCreateResponseInterface {
   success: boolean;
   message: string;
-  data: Data;
+  data: GroupPrivateCreateResponse;
 }
 
-interface Data {
+export interface GroupPrivateCreateResponse {
   id: string;
   name: string;
   code: string;
   type: string;
-  avatar: null;
-  last_msg: null;
+  avatar?: string;
+  last_msg?: string;
+  last_sender?: string;
   created_at: Date;
   updated_at: Date;
 }
