@@ -1,3 +1,23 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next/core-web-vitals",
+    "airbnb",
+    "airbnb-typescript"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-uses-react": "off",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+    "react/jsx-props-no-spreading": "off",
+    "implicit-arrow-linebreak":"off",
+    "object-curly-newline": "off",
+    "max-len":["error", { "code": 120 }],
+    
+    // Usefull for redux
+    "no-param-reassign": ["error", { "props": false }]
+
+  }
 }

@@ -1,27 +1,26 @@
-import { createContext, useState } from 'react';
+import { createContext, useMemo, useState } from 'react';
 
 type ContextType = {
-  id: string | number | undefined;
-  setId: (val: string | number | undefined) => void;
+  id: string | undefined;
+  setId: (val: string | undefined) => void;
 };
 
 const defaultValue: ContextType = {
   id: undefined,
-  setId: (val) => {},
+  setId: () => {},
 };
 
 export const SelectedChatListContext = createContext(defaultValue);
 
-const SelectedChatListProvider = ({ children }: any) => {
-  const [id, setId] = useState<string | number | undefined>(undefined);
+function SelectedChatListProvider({ children }: any) {
+  const [id, setId] = useState<string | undefined>(undefined);
 
-  const onIdHandler = (val: string | number | undefined) => {
+  const onIdHandler = (val: string | undefined) => {
     setId(val);
   };
 
-  return (
-    <SelectedChatListContext.Provider value={{ id, setId: onIdHandler }}>{children}</SelectedChatListContext.Provider>
-  );
-};
+  const value = useMemo(() => ({ id, setId: onIdHandler }), [id]);
 
+  return <SelectedChatListContext.Provider value={value}>{children}</SelectedChatListContext.Provider>;
+}
 export default SelectedChatListProvider;

@@ -1,16 +1,10 @@
+import { NextRequest, NextResponse } from 'next/server';
 import { KEY_COOKIES_LOGIN } from '@/utils/constant';
-import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 
-const excludePathCheckingToken = (path: string) => {
-  return (
-    path.startsWith('/login') ||
-    path.startsWith('/_next') ||
-    path.startsWith('/favicon') ||
-    path.startsWith('/register')
-  );
-};
+const excludePathCheckingToken = (path: string) =>
+  path.startsWith('/login') || path.startsWith('/_next') || path.startsWith('/favicon') || path.startsWith('/register');
 
-export function middleware(request: NextRequest, event: NextFetchEvent) {
+function middleware(request: NextRequest) {
   const url = request.nextUrl.pathname;
   const accessToken = request.cookies.get(KEY_COOKIES_LOGIN);
 
@@ -24,10 +18,13 @@ export function middleware(request: NextRequest, event: NextFetchEvent) {
   }
 
   if (!excludePathCheckingToken(url)) {
-    if (accessToken == undefined) {
+    if (accessToken === undefined) {
       return NextResponse.redirect(new URL('/login', request.url));
     }
   }
 
   return NextResponse.next();
 }
+
+// eslint-disable-next-line import/prefer-default-export
+export { middleware };

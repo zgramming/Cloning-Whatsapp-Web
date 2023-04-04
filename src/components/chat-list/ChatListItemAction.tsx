@@ -1,4 +1,4 @@
-const ChatListItemAction = () => {
+function ChatListItemAction() {
   const time = new Date().toLocaleTimeString('id-ID', {
     timeStyle: 'short',
   });
@@ -7,6 +7,6 @@ const ChatListItemAction = () => {
       <div className="text-xs text-primary-tealdark">{time}</div>
     </div>
   );
-};
+}
 
 export default ChatListItemAction;

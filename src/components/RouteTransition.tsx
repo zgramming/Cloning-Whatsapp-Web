@@ -2,7 +2,7 @@ import { nprogress, NavigationProgress } from '@mantine/nprogress';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
-const RouteTransition = () => {
+function RouteTransition() {
   const { asPath, events } = useRouter();
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const RouteTransition = () => {
     };
   }, [asPath, events]);
 
-  return <NavigationProgress autoReset={true} progressLabel="Loading Page" />;
-};
+  return <NavigationProgress progressLabel="Loading Page" autoReset />;
+}
 
 export default RouteTransition;

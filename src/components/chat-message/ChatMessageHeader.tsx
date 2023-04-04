@@ -1,7 +1,7 @@
 import { ActionIcon, Avatar } from '@mantine/core';
 import { IconDotsVertical, IconSearch } from '@tabler/icons-react';
 
-const ChatMessageHeader = () => {
+function ChatMessageHeader() {
   return (
     <div className="h-16 flex flex-row items-center bg-gray-100 gap-3 px-5 py-3">
       <Avatar radius="xl" />
@@ -20,6 +20,6 @@ const ChatMessageHeader = () => {
       </div>
     </div>
   );
-};
+}
 
 export default ChatMessageHeader;

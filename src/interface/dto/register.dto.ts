@@ -3,4 +3,3 @@ export type RegisterDTO = {
   name: string;
   phone: string;
 };
-

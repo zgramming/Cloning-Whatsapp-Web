@@ -1,9 +1,6 @@
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
 
-import { DrawerNavigationStackContext } from '@/context/DrawerNavigationStackContext';
-import API from '@/utils/api';
-import { routes } from '@/utils/routes';
 import { ActionIcon, Avatar, Menu, Tooltip } from '@mantine/core';
 import {
   IconDotsVertical,
@@ -13,10 +10,14 @@ import {
   IconSettings,
   IconUsersGroup,
 } from '@tabler/icons-react';
+import { DrawerNavigationStackContext } from '@/context/DrawerNavigationStackContext';
+import { SelectedChatListContext } from '@/context/SelectedChatListContext';
+import API from '@/utils/api';
+import { routes } from '@/utils/routes';
 
 import DrawerHeader from '../DrawerHeader';
 
-const DrawerSetting = () => {
+function DrawerSetting() {
   return (
     <div className="flex flex-col">
       <DrawerHeader title="Setting" />
@@ -25,15 +26,18 @@ const DrawerSetting = () => {
       </div>
     </div>
   );
-};
+}
 
-const ChatListHeader = () => {
-  const { latestNode, push, nodes } = useContext(DrawerNavigationStackContext);
+function ChatListHeader() {
+  const { push } = useContext(DrawerNavigationStackContext);
   const { replace } = useRouter();
+  const { setId } = useContext(SelectedChatListContext);
   return (
     <div className="h-16 bg-gray-100 px-5 py-3">
       <div className="flex flex-row items-center h-full">
-        <Avatar radius="xl" />
+        <Tooltip label="Coming Soon">
+          <Avatar radius="xl" className="hover:cursor-pointer" />
+        </Tooltip>
         <div className="grow flex flex-wrap justify-end gap-5">
           <Tooltip label="Coming Soon">
             <ActionIcon>
@@ -60,7 +64,7 @@ const ChatListHeader = () => {
             <Menu.Dropdown>
               <Menu.Item
                 icon={<IconSettings size={14} />}
-                onClick={(e) => {
+                onClick={() => {
                   push(<DrawerSetting />);
                 }}
               >
@@ -68,8 +72,11 @@ const ChatListHeader = () => {
               </Menu.Item>
               <Menu.Item
                 icon={<IconLogout size={14} />}
-                onClick={(e) => {
+                onClick={() => {
+                  /// Clear context selected chat list
+                  setId(undefined);
                   API.logout();
+
                   replace(routes.login);
                 }}
               >
@@ -81,6 +88,6 @@ const ChatListHeader = () => {
       </div>
     </div>
   );
-};
+}
 
 export default ChatListHeader;

@@ -1,7 +1,6 @@
+import Head from 'next/head';
 import ChatContainer from '@/components/ChatContainer';
 import NavHeader from '@/components/NavHeader';
-
-import Head from 'next/head';
 
 export default function Home() {
   return (

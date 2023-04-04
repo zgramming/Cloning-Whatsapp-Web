@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from 'react';
+import { createContext, ReactNode, useMemo, useState } from 'react';
 
 type ContextType = {
   nodes: ReactNode[];
@@ -11,14 +11,14 @@ type ContextType = {
 const defaultValue: ContextType = {
   nodes: [],
   latestNode: undefined,
-  push: (val) => {},
+  push: () => {},
   pop: () => {},
   popAll: () => {},
 };
 
 export const DrawerNavigationStackContext = createContext(defaultValue);
 
-const DrawerNavigationStackProvider = ({ children }: any) => {
+function DrawerNavigationStackProvider({ children }: any) {
   const [nodes, setNodes] = useState<ReactNode[]>([]);
   const [latestNode, setLatestNode] = useState<ReactNode | undefined>();
 
@@ -45,13 +45,12 @@ const DrawerNavigationStackProvider = ({ children }: any) => {
     setLatestNode(undefined);
   };
 
-  return (
-    <DrawerNavigationStackContext.Provider
-      value={{ nodes, push: onPushHandler, pop: onPopHandler, popAll: onPopAllHandler, latestNode }}
-    >
-      {children}
-    </DrawerNavigationStackContext.Provider>
+  const value = useMemo(
+    () => ({ nodes, push: onPushHandler, pop: onPopHandler, popAll: onPopAllHandler, latestNode }),
+    [latestNode, nodes],
   );
-};
+
+  return <DrawerNavigationStackContext.Provider value={value}>{children}</DrawerNavigationStackContext.Provider>;
+}
 
 export default DrawerNavigationStackProvider;

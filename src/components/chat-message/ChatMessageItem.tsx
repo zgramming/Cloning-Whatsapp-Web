@@ -1,12 +1,13 @@
 import { useContext } from 'react';
 
 import { AuthContext } from '@/context/AuthContext';
-import { MessageInterface } from '@/interface/message.interface';
+import { Message } from '@/interface/message/message.interface';
 
-const ChatMessageItem = ({ message }: { message: MessageInterface }) => {
+function ChatMessageItem({ message }: { message: Message }) {
   const { user } = useContext(AuthContext);
 
-  const { id, type, text, sender_name, from, to, date } = message;
+  const { id, from, message: msg, created_at: createdAt } = message;
+  const date = new Date(createdAt);
   const time = date.toLocaleTimeString('id-ID', {
     timeStyle: 'short',
   });
@@ -20,10 +21,10 @@ const ChatMessageItem = ({ message }: { message: MessageInterface }) => {
         flex flex-col gap-2 px-5 py-3 rounded-lg
       `}
     >
-      <div className={`text-sm ${isFromMe && 'text-right'}`}>{text}</div>
+      <div className={`text-sm ${isFromMe && 'text-right'}`}>{msg}</div>
       <div className={`text-xs ${isFromMe && 'text-right'}`}>{time}</div>
     </div>
   );
-};
+}
 
 export default ChatMessageItem;

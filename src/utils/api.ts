@@ -1,14 +1,24 @@
 import axios from 'axios';
-import { removeCookies, setCookie } from 'cookies-next';
+import { getCookie, removeCookies, setCookie } from 'cookies-next';
 
 import { LoginDTO } from '@/interface/dto/login.dto';
 import { RegisterDTO } from '@/interface/dto/register.dto';
 import { LoginResponseInterface } from '@/interface/login-response.interface';
 import RegisterResponseInterface from '@/interface/register-response.interface';
-import { UserResponseInterface } from '@/interface/user.interface';
+import { UserResponseInterface } from '@/interface/user/user.interface';
 
+import { MyGroupInterface } from '@/interface/group/my-group.response.interface';
+import { MessageInterface } from '@/interface/message/message.interface';
 import { BASE_URL_API, KEY_COOKIES_LOGIN, KEY_COOKIES_USER } from './constant';
 
+const bearerHeader = () => {
+  const token = getCookie(KEY_COOKIES_LOGIN);
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+};
 class API {
   static async register(value: RegisterDTO) {
     const { data } = await axios.post(`${BASE_URL_API}/user`, value);
@@ -51,6 +61,27 @@ class API {
       path: '/',
       maxAge: 0,
     });
+  }
+
+  // Group
+
+  static async getMyGroup() {
+    const { data } = await axios.get(`${BASE_URL_API}/group/me`, {
+      ...bearerHeader(),
+    });
+    const result: MyGroupInterface = data;
+    return result;
+  }
+
+  // Message
+
+  static async getMessageByGroupId(groupId: string) {
+    const { data } = await axios.get(`${BASE_URL_API}/message/group/${groupId}`, {
+      ...bearerHeader(),
+    });
+
+    const result: MessageInterface = data;
+    return result;
   }
 }
 

@@ -16,5 +16,3 @@ interface Data {
 }
 
 export default RegisterResponseInterface;
-
-// Path: utils\api.ts

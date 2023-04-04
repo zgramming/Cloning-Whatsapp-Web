@@ -1,6 +1,8 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useMemo, useState } from 'react';
 
-import { UserInterface } from '@/interface/user.interface';
+import { getCookie } from 'cookies-next';
+import { UserInterface } from '@/interface/user/user.interface';
+import { KEY_COOKIES_USER } from '@/utils/constant';
 
 type ContextType = {
   user: UserInterface | undefined;
@@ -9,19 +11,33 @@ type ContextType = {
 
 const defaultValue: ContextType = {
   user: undefined,
-  setUser: (val) => {},
+  setUser: () => {},
 };
 
 export const AuthContext = createContext(defaultValue);
 
-const AuthProvider = ({ children }: any) => {
+function AuthProvider({ children }: any) {
   const [user, setUser] = useState<UserInterface | undefined>();
 
   const onUserHandler = (val: UserInterface | undefined) => {
     setUser(val);
   };
 
-  return <AuthContext.Provider value={{ user, setUser: onUserHandler }}>{children}</AuthContext.Provider>;
-};
+  useEffect(() => {
+    const cookie = getCookie(KEY_COOKIES_USER);
+
+    try {
+      if (cookie) setUser(JSON.parse(cookie as string));
+    } catch (error) {
+      setUser(undefined);
+    }
+
+    return () => {};
+  }, []);
+
+  const value = useMemo(() => ({ user, setUser: onUserHandler }), [user]);
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
 
 export default AuthProvider;

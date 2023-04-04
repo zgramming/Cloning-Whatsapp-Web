@@ -1,14 +1,13 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 
-import { AuthContext } from '@/context/AuthContext';
-import API from '@/utils/api';
-import { errorHandler } from '@/utils/error-handler';
-import { routes } from '@/utils/routes';
 import { Button, Card, LoadingOverlay, PasswordInput, TextInput } from '@mantine/core';
 import { isNotEmpty, matches, useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
+import API from '@/utils/api';
+import { errorHandler } from '@/utils/error-handler';
+import { routes } from '@/utils/routes';
 
 type FormType = {
   phone: string;
@@ -20,9 +19,8 @@ const initialValues: FormType = {
   password: '',
 };
 
-const Page = () => {
+function Page() {
   const { push } = useRouter();
-  const { setUser } = useContext(AuthContext);
   const [isLoading, setLoading] = useState(false);
 
   const form = useForm({
@@ -31,7 +29,7 @@ const Page = () => {
       phone: (value) => {
         if (isNotEmpty('Phone is required')(value)) return 'Phone is required';
         if (matches(/^\d+$/)(value)) return 'Phone must contain only numbers';
-        if (matches(RegExp(`^08[0-9]{9,}$`))(value)) return 'Phone must start with 08 and at least 11 characters long';
+        if (matches(/^08[0-9]{9,}$/)(value)) return 'Phone must start with 08 and at least 11 characters long';
 
         return null;
       },
@@ -72,7 +70,7 @@ const Page = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex flex-col justify-center items-center min-h-screen bg-primary-teal">
-        <Card shadow={'md'} padding={'xl'}>
+        <Card shadow="md" padding="xl">
           <LoadingOverlay visible={isLoading} overlayBlur={2} />
 
           <form className="flex flex-col gap-5" onSubmit={form.onSubmit(onSubmit)}>
@@ -92,7 +90,7 @@ const Page = () => {
             />
             <Button type="submit">Login</Button>
             <div className="text-center font-light">
-              Belum punya account ?{' '}
+              Belum punya account ?
               <Button
                 variant="subtle"
                 onClick={() => {
@@ -107,6 +105,6 @@ const Page = () => {
       </main>
     </>
   );
-};
+}
 
 export default Page;

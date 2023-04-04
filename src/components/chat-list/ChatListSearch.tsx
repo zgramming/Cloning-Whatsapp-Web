@@ -1,7 +1,7 @@
 import { ActionIcon, TextInput } from '@mantine/core';
 import { IconAlignCenter } from '@tabler/icons-react';
 
-const ChatListSearch = () => {
+function ChatListSearch() {
   return (
     <div
       className={`
@@ -15,6 +15,6 @@ const ChatListSearch = () => {
       </ActionIcon>
     </div>
   );
-};
+}
 
 export default ChatListSearch;

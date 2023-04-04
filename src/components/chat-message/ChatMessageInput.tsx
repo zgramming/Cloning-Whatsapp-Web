@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { ActionIcon, TextInput } from '@mantine/core';
 import { IconMicrophone, IconMoodHappy, IconPaperclip, IconSend } from '@tabler/icons-react';
 
-const ChatMessageInput = () => {
+function ChatMessageInput() {
   const [message, setMessage] = useState<string>();
   return (
     <div className="flex flex-row items-center bg-gray-100 gap-5 p-5">
@@ -23,6 +23,6 @@ const ChatMessageInput = () => {
       </div>
     </div>
   );
-};
+}
 
 export default ChatMessageInput;
