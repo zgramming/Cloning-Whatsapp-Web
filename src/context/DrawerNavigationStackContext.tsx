@@ -25,7 +25,9 @@ function DrawerNavigationStackProvider({ children }: any) {
   const onPushHandler = (val: ReactNode) => {
     setNodes((prevState) => {
       setLatestNode(val);
-      return [...prevState, val];
+      const result = [...prevState, val];
+
+      return result;
     });
   };
 
@@ -36,7 +38,10 @@ function DrawerNavigationStackProvider({ children }: any) {
         return [];
       }
 
-      return prevState.slice(0, prevState.length - 1);
+      const result = prevState.slice(0, prevState.length - 1);
+      setLatestNode(result[result.length - 1]);
+
+      return result;
     });
   };
 
