@@ -15,7 +15,7 @@
     "implicit-arrow-linebreak":"off",
     "object-curly-newline": "off",
     "max-len":["error", { "code": 120 }],
-    
+    "react/jsx-wrap-multilines": "off",
     // Usefull for redux
     "no-param-reassign": ["error", { "props": false }]
 

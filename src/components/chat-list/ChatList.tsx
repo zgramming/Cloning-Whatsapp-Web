@@ -38,7 +38,7 @@ function ChatListItems() {
 
 function ChatList() {
   return (
-    <div className="relative basis-[30%] flex flex-col">
+    <div className="relative basis-[30%] flex flex-col shadow">
       <DrawerCustom />
       <ChatListHeader />
       <ChatListSearch />

@@ -63,6 +63,16 @@ class API {
     });
   }
 
+  // User
+
+  static async getUserByPhone(phone: string) {
+    const { data } = await axios.get(`${BASE_URL_API}/user/phone/${phone}`, {
+      ...bearerHeader(),
+    });
+    const result: UserResponseInterface = data;
+    return result;
+  }
+
   // Group
 
   static async getMyGroup() {

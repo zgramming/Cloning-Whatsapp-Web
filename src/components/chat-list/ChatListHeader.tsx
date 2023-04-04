@@ -15,18 +15,8 @@ import { SelectedChatListContext } from '@/context/SelectedChatListContext';
 import API from '@/utils/api';
 import { routes } from '@/utils/routes';
 
-import DrawerHeader from '../DrawerHeader';
-
-function DrawerSetting() {
-  return (
-    <div className="flex flex-col">
-      <DrawerHeader title="Setting" />
-      <div className="p-5">
-        <h1>ss</h1>
-      </div>
-    </div>
-  );
-}
+import DrawerChat from '../drawer/DrawerChat';
+import DrawerSetting from '../drawer/DrawerSetting';
 
 function ChatListHeader() {
   const { push } = useContext(DrawerNavigationStackContext);
@@ -50,7 +40,11 @@ function ChatListHeader() {
             </ActionIcon>
           </Tooltip>
           <Tooltip label="Coming Soon">
-            <ActionIcon>
+            <ActionIcon
+              onClick={() => {
+                push(<DrawerChat key="DrawerChat" />);
+              }}
+            >
               <IconMessage />
             </ActionIcon>
           </Tooltip>
