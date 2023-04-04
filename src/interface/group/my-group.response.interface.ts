@@ -11,22 +11,21 @@ export interface MyGroup {
   type: 'PRIVATE' | 'PUBLIC' | 'GROUP';
   avatar?: string;
   last_msg: string;
-  last_sender?: string;
+  last_sender: string;
   created_at: Date;
   updated_at: Date;
-  sender?: Sender;
   group_member: GroupMember[];
+  interlocutors?: Interlocutors;
 }
 
-export interface GroupMember {
+interface GroupMember {
   user_id: string;
-  join_at: Date;
-  leave_at?: string;
-  user: Sender;
+  user: Interlocutors;
 }
 
-export interface Sender {
+interface Interlocutors {
   id: string;
   name: string;
+  phone: string;
   avatar?: string;
 }

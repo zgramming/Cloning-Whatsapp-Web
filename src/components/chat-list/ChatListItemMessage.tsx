@@ -8,7 +8,6 @@ function ChatListItemMessageDetail({ group }: { group: MyGroup }) {
   const { user: userLogin } = useContext(AuthContext);
 
   const isGroup = group.type === 'GROUP';
-  const participant = group.group_member[0];
 
   if (isGroup) {
     if (group.last_sender === userLogin?.id) {
@@ -21,7 +20,7 @@ function ChatListItemMessageDetail({ group }: { group: MyGroup }) {
     }
   }
 
-  if (participant.user.id === userLogin?.id) {
+  if (group.interlocutors?.id === userLogin?.id) {
     return <IconCheck size="1rem" />;
   }
 
@@ -29,9 +28,8 @@ function ChatListItemMessageDetail({ group }: { group: MyGroup }) {
 }
 
 function ChatListItemMessage({ group }: { group: MyGroup }) {
-  const participant = group.group_member[0];
   const isGroup = group.type === 'GROUP';
-  const name = isGroup ? group.name : participant.user.name;
+  const name = isGroup ? group.name : group.interlocutors?.name;
 
   return (
     <div className="grow flex flex-col gap-2">

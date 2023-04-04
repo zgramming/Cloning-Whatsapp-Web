@@ -14,7 +14,6 @@ type ChatListItemType = {
 function ChatListItem({ group }: ChatListItemType) {
   const { id, setId } = useContext(SelectedChatListContext);
   const isGroup = group.type === 'GROUP';
-  const participant = group.group_member[0];
   return (
     <div
       role="presentation"
@@ -27,7 +26,7 @@ function ChatListItem({ group }: ChatListItemType) {
         setId(group.id);
       }}
     >
-      <ChatListItemAvatar avatar={isGroup ? group.avatar : participant.user.avatar} />
+      <ChatListItemAvatar avatar={isGroup ? group.avatar : group.interlocutors?.avatar} />
       <ChatListItemMessage group={group} />
       <ChatListItemAction />
     </div>

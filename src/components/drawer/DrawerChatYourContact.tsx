@@ -15,7 +15,7 @@ function DrawerChatYourContact() {
         const first = curr.name.toUpperCase()[0];
         firstLetter = first;
       } else {
-        const first = curr.group_member[0].user.name.toUpperCase()[0];
+        const first = curr.interlocutors?.name.toUpperCase()[0] ?? '';
         firstLetter = first;
       }
 
