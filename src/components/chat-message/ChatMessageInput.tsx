@@ -1,10 +1,11 @@
-import { useContext, useState } from 'react';
+import { ChangeEvent, useContext, useState } from 'react';
 
 import { ActionIcon, LoadingOverlay, TextInput, Tooltip } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconMicrophone, IconMoodHappy, IconPaperclip, IconSend } from '@tabler/icons-react';
 import { AuthContext } from '@/context/AuthContext';
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
+import { SocketIOContext } from '@/context/SocketIOContext';
 import { useAppDispatch, useAppSelector } from '@/hooks/use-dispatch-selector';
 import { asyncMyGroup } from '@/redux-toolkit/feature/group/group.thunk';
 import { asyncSendMessage } from '@/redux-toolkit/feature/message/message.thunk';
@@ -12,14 +13,24 @@ import { errorHandler } from '@/utils/error-handler';
 
 function ChatMessageInput() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>();
+  const [message, setMessage] = useState<string>('');
 
   const { user } = useContext(AuthContext);
   const { id: groupId } = useContext(SelectedChatListContext);
+  const { typing: emitTyping, sendMessage: emitSendMessage } = useContext(SocketIOContext);
 
   const messages = useAppSelector((state) => state.group.detail.data?.messages ?? []);
 
   const dispatch = useAppDispatch();
+
+  const onChangeText = (e: ChangeEvent<HTMLInputElement>) => {
+    emitTyping({
+      groupId: groupId || '',
+      userId: user?.id || '',
+      message: e.currentTarget.value,
+    });
+    setMessage(e.currentTarget.value);
+  };
 
   const onSendMessageHandler = async () => {
     try {
@@ -38,6 +49,9 @@ function ChatMessageInput() {
         await dispatch(asyncMyGroup()).unwrap();
       }
 
+      /// Emit message to socket io
+      emitSendMessage(result);
+
       notifications.show({
         title: 'Success',
         message: result.message,
@@ -54,6 +68,7 @@ function ChatMessageInput() {
       setIsLoading(false);
     }
   };
+
   return (
     <div className="flex flex-row items-center bg-gray-100 gap-5 p-5">
       <LoadingOverlay visible={isLoading} overlayBlur={2} />
@@ -70,7 +85,7 @@ function ChatMessageInput() {
         </ActionIcon>
       </div>
       <div className="grow">
-        <TextInput placeholder="Tuliskan sebuah pesan" value={message} onChange={(e) => setMessage(e.target.value)} />
+        <TextInput placeholder="Tuliskan sebuah pesan" value={message} onChange={onChangeText} />
       </div>
       <div className="flex flex-wrap gap-3">
         <ActionIcon>

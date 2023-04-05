@@ -26,7 +26,10 @@ function ChatMessage() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(asyncGroupDetail(groupId || ''));
+    if (groupId) {
+      dispatch(asyncGroupDetail(groupId));
+    }
+
     return () => {};
   }, [dispatch, groupId]);
 

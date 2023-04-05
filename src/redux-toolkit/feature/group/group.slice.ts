@@ -3,7 +3,6 @@ import { GroupDetail, GroupDetailInterface } from '@/interface/group/group.detai
 import { MyGroup, MyGroupInterface } from '@/interface/group/group.me.interface';
 import { MessageCreateResponseInterface } from '@/interface/message/message.create-response.interface';
 
-import { asyncSendMessage } from '../message/message.thunk';
 import { asyncGroupDetail, asyncMyGroup } from './group.thunk';
 
 type SliceType = {
@@ -32,7 +31,23 @@ const initialState: SliceType = {
 const groupSlice = createSlice({
   initialState,
   name: 'inbox',
-  reducers: {},
+  reducers: {
+    updateLastMessageGroup: (state, action) => {
+      const response: MessageCreateResponseInterface = action.payload;
+      const { data } = response;
+
+      const index = state.items.findIndex((item) => item.id === data.group_id);
+      if (index !== -1) {
+        state.items[index].last_msg = data.message;
+      }
+    },
+    addMessageToGroupDetail: (state, action) => {
+      const response: MessageCreateResponseInterface = action.payload;
+      const { data } = response;
+
+      state.detail.data?.messages.push({ ...data });
+    },
+  },
   extraReducers: (builder) => {
     /// my group
     builder.addCase(asyncMyGroup.pending, (state) => {
@@ -67,20 +82,22 @@ const groupSlice = createSlice({
     /// on success send message :
     /// 1. push message to group detail
     /// 2. update last message in group list
-    builder.addCase(asyncSendMessage.fulfilled, (state, action) => {
-      const response: MessageCreateResponseInterface = action.payload;
-      const { data } = response;
+    // builder.addCase(asyncSendMessage.fulfilled, (state, action) => {
+    //   const response: MessageCreateResponseInterface = action.payload;
+    //   const { data } = response;
 
-      // push message to group detail
-      state.detail.data?.messages.push({ ...data });
+    //   // push message to group detail
+    //   state.detail.data?.messages.push({ ...data });
 
-      // update last message in group list
-      const index = state.items.findIndex((item) => item.id === data.group_id);
-      if (index !== -1) {
-        state.items[index].last_msg = data.message;
-      }
-    });
+    //   // update last message in group list
+    //   const index = state.items.findIndex((item) => item.id === data.group_id);
+    //   if (index !== -1) {
+    //     state.items[index].last_msg = data.message;
+    //   }
+    // });
   },
 });
+
+export const { updateLastMessageGroup, addMessageToGroupDetail } = groupSlice.actions;
 
 export default groupSlice.reducer;

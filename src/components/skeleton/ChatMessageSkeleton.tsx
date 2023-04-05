@@ -1,10 +1,12 @@
 import { Skeleton } from '@mantine/core';
 
 function ChatMessageSkeleton() {
+  const array = Array.from(Array(10)).map((_, index) => index);
+
   return (
     <>
-      {Array.from<number>({ length: 10 }).map((value) => (
-        <div key={value}>
+      {array.map((value) => (
+        <div key={`${value}_key`}>
           <Skeleton height={50} circle mb="xl" />
           <Skeleton height={8} radius="xl" />
           <Skeleton height={8} mt={6} radius="xl" />
