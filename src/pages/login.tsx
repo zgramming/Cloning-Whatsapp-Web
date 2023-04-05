@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 import { Button, Card, LoadingOverlay, PasswordInput, TextInput } from '@mantine/core';
 import { isNotEmpty, matches, useForm } from '@mantine/form';
@@ -8,6 +8,8 @@ import { notifications } from '@mantine/notifications';
 import API from '@/utils/api';
 import { errorHandler } from '@/utils/error-handler';
 import { routes } from '@/utils/routes';
+import { AuthContext } from '@/context/AuthContext';
+import { SocketIOContext } from '@/context/SocketIOContext';
 
 type FormType = {
   phone: string;
@@ -22,6 +24,8 @@ const initialValues: FormType = {
 function Page() {
   const { push } = useRouter();
   const [isLoading, setLoading] = useState(false);
+  const { setUser } = useContext(AuthContext);
+  const { connect } = useContext(SocketIOContext);
 
   const form = useForm({
     initialValues,
@@ -41,6 +45,12 @@ function Page() {
     try {
       setLoading(true);
       const result = await API.login(values);
+
+      setUser({
+        ...result.data,
+      });
+
+      connect(result.data.id);
 
       notifications.show({
         title: 'Success',

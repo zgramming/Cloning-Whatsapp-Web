@@ -9,6 +9,7 @@ import SelectedChatListProvider from '@/context/SelectedChatListContext';
 import AuthProvider from '@/context/AuthContext';
 import RouteTransition from '@/components/RouteTransition';
 import { store } from '@/redux-toolkit/store';
+import SocketIOProvider from '@/context/SocketIOContext';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -40,11 +41,13 @@ export default function App({ Component, pageProps }: AppProps) {
       >
         <RouteTransition />
         <Notifications position="top-right" />
-        <AuthProvider>
-          <SelectedChatListProvider>
-            <Component {...pageProps} />
-          </SelectedChatListProvider>
-        </AuthProvider>
+        <SocketIOProvider>
+          <AuthProvider>
+            <SelectedChatListProvider>
+              <Component {...pageProps} />
+            </SelectedChatListProvider>
+          </AuthProvider>
+        </SocketIOProvider>
       </MantineProvider>
     </Provider>
   );

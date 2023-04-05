@@ -19,30 +19,22 @@ export const AuthContext = createContext(defaultValue);
 function AuthProvider({ children }: any) {
   const [user, setUser] = useState<UserInterface | undefined>();
 
-  const onUserHandler = (val: UserInterface | undefined) => {
-    setUser((prev) => {
-      if (prev !== val) {
-        return val;
-      }
-      return prev;
-    });
+  const onSetUser = (val: UserInterface | undefined) => {
+    setUser(val);
   };
 
   useEffect(() => {
     const cookie = getCookie(KEY_COOKIES_USER);
 
     try {
-      if (cookie) {
-        onUserHandler(JSON.parse(cookie as string));
-      }
+      setUser(JSON.parse(cookie as string));
     } catch (error) {
       setUser(undefined);
     }
-
     return () => {};
   }, []);
 
-  const value = useMemo(() => ({ user, setUser: onUserHandler }), [user]);
+  const value: ContextType = useMemo(() => ({ user, setUser: onSetUser }), [user]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

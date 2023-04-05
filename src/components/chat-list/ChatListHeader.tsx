@@ -13,6 +13,7 @@ import {
 import { AuthContext } from '@/context/AuthContext';
 import { DrawerNavigationStackContext } from '@/context/DrawerNavigationStackContext';
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
+import { SocketIOContext } from '@/context/SocketIOContext';
 import API from '@/utils/api';
 import { routes } from '@/utils/routes';
 
@@ -29,9 +30,26 @@ function ChatListHeaderAvatar() {
 }
 
 function ChatListHeader() {
-  const { push } = useContext(DrawerNavigationStackContext);
   const { replace } = useRouter();
-  const { setId } = useContext(SelectedChatListContext);
+  const { disconnect } = useContext(SocketIOContext);
+  const { push } = useContext(DrawerNavigationStackContext);
+  const { setId: setSelectedChat } = useContext(SelectedChatListContext);
+  const { user, setUser } = useContext(AuthContext);
+
+  const onLogout = () => {
+    /// 1. Logout from server
+    /// 2. Disconnect from socket.io
+    /// 3. Set user to undefined
+    /// 4. Set selected chat to undefined
+    /// 5. Redirect to login page
+
+    API.logout();
+    disconnect(user?.id || '');
+    setUser(undefined);
+    setSelectedChat(undefined);
+    replace(routes.login);
+  };
+
   return (
     <div className="h-16 bg-gray-100 px-5 py-3">
       <div className="flex flex-row items-center h-full">
@@ -72,16 +90,7 @@ function ChatListHeader() {
               >
                 Settings
               </Menu.Item>
-              <Menu.Item
-                icon={<IconLogout size={14} />}
-                onClick={() => {
-                  /// Clear context selected chat list
-                  setId(undefined);
-                  API.logout();
-
-                  replace(routes.login);
-                }}
-              >
+              <Menu.Item icon={<IconLogout size={14} />} onClick={onLogout}>
                 Logout
               </Menu.Item>
             </Menu.Dropdown>
