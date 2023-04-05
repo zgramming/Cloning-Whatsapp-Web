@@ -44,6 +44,9 @@ const groupSlice = createSlice({
     addMessageToGroupDetail: (state, action) => {
       const response: MessageCreateResponseInterface = action.payload;
       const { data } = response;
+      const { group_id: groupId } = data;
+
+      if (state.detail.data?.id !== groupId) return;
 
       state.detail.data?.messages.push({ ...data });
     },
@@ -78,23 +81,6 @@ const groupSlice = createSlice({
       state.detail.loading = false;
       state.detail.error = action.payload as string;
     });
-
-    /// on success send message :
-    /// 1. push message to group detail
-    /// 2. update last message in group list
-    // builder.addCase(asyncSendMessage.fulfilled, (state, action) => {
-    //   const response: MessageCreateResponseInterface = action.payload;
-    //   const { data } = response;
-
-    //   // push message to group detail
-    //   state.detail.data?.messages.push({ ...data });
-
-    //   // update last message in group list
-    //   const index = state.items.findIndex((item) => item.id === data.group_id);
-    //   if (index !== -1) {
-    //     state.items[index].last_msg = data.message;
-    //   }
-    // });
   },
 });
 
