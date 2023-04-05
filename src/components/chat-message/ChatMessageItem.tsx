@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 
 import { AuthContext } from '@/context/AuthContext';
-import { Message } from '@/interface/message/message.interface';
+import { GroupDetailMessage } from '@/interface/group/group.detail.interface';
 
-function ChatMessageItem({ message }: { message: Message }) {
+function ChatMessageItem({ message }: { message: GroupDetailMessage }) {
   const { user } = useContext(AuthContext);
 
   const { id, from, message: msg, created_at: createdAt } = message;

@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
+import { MyGroup } from '@/interface/group/group.me.interface';
 
-import { MyGroup } from '@/interface/group/my-group.response.interface';
 import ChatListItemAction from './ChatListItemAction';
 import ChatListItemAvatar from './ChatListItemAvatar';
 import ChatListItemMessage from './ChatListItemMessage';
@@ -14,6 +14,7 @@ type ChatListItemType = {
 function ChatListItem({ group }: ChatListItemType) {
   const { id, setId } = useContext(SelectedChatListContext);
   const isGroup = group.type === 'GROUP';
+
   return (
     <div
       role="presentation"

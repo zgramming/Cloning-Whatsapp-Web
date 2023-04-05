@@ -55,7 +55,7 @@ function DrawerSearchPerson() {
         <div className="p-3">
           <TextInput
             defaultValue={enteredPhone}
-            placeholder="Cari orang"
+            placeholder="Cari orang berdasarkan nomor telepon"
             variant="filled"
             icon={loadingEnteredPhone ? <Loader size="sm" /> : <IconSearch size="1rem" />}
             onChange={(e) => {
@@ -71,11 +71,14 @@ function DrawerSearchPerson() {
             onClick={async () => {
               const { group, data: user } = responseOnFilteredUser;
 
-              /// Check if user has private group with the filtered user
+              /// Create private group if not exist and set selected chat to private group
+              /// Otherwise set selected chat to private group that already exist
               if (!group) {
                 try {
                   setOnLoadingCreatePrivateGroup(true);
                   const result = await dispatch(asyncCreatePrivateGroup(user.id)).unwrap();
+
+                  // Close all stack drawer and set selected chat
                   closeAllStackDrawer();
                   setId(result.data.id);
                 } catch (err) {

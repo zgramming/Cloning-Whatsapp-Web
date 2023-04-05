@@ -1,6 +1,6 @@
+import { getCookie } from 'cookies-next';
 import { createContext, useEffect, useMemo, useState } from 'react';
 
-import { getCookie } from 'cookies-next';
 import { UserInterface } from '@/interface/user/user.interface';
 import { KEY_COOKIES_USER } from '@/utils/constant';
 
@@ -20,14 +20,21 @@ function AuthProvider({ children }: any) {
   const [user, setUser] = useState<UserInterface | undefined>();
 
   const onUserHandler = (val: UserInterface | undefined) => {
-    setUser(val);
+    setUser((prev) => {
+      if (prev !== val) {
+        return val;
+      }
+      return prev;
+    });
   };
 
   useEffect(() => {
     const cookie = getCookie(KEY_COOKIES_USER);
 
     try {
-      if (cookie) setUser(JSON.parse(cookie as string));
+      if (cookie) {
+        onUserHandler(JSON.parse(cookie as string));
+      }
     } catch (error) {
       setUser(undefined);
     }

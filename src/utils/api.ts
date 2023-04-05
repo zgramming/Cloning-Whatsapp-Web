@@ -2,10 +2,13 @@ import axios from 'axios';
 import { getCookie, removeCookies, setCookie } from 'cookies-next';
 
 import { LoginDTO } from '@/interface/dto/login.dto';
+import { MessageCreateDTO } from '@/interface/dto/message.create.dto';
 import { RegisterDTO } from '@/interface/dto/register.dto';
 import { GroupPrivateCreateResponseInterface } from '@/interface/group/group-private-create-response.interface';
-import { MyGroupInterface } from '@/interface/group/my-group.response.interface';
+import { GroupDetailInterface } from '@/interface/group/group.detail.interface';
+import { MyGroupInterface } from '@/interface/group/group.me.interface';
 import { LoginResponseInterface } from '@/interface/login-response.interface';
+import { MessageCreateResponseInterface } from '@/interface/message/message.create-response.interface';
 import { MessageInterface } from '@/interface/message/message.interface';
 import RegisterResponseInterface from '@/interface/register-response.interface';
 import { UserResponseInterface } from '@/interface/user/user.interface';
@@ -76,6 +79,14 @@ class API {
 
   // Group
 
+  static async getGroupDetail(id: string) {
+    const { data } = await axios.get(`${BASE_URL_API}/group/${id}`, {
+      ...bearerHeader(),
+    });
+    const result: GroupDetailInterface = data;
+    return result;
+  }
+
   static async getMyGroup() {
     const { data } = await axios.get(`${BASE_URL_API}/group/me`, {
       ...bearerHeader(),
@@ -104,6 +115,23 @@ class API {
     });
 
     const result: MessageInterface = data;
+    return result;
+  }
+
+  static async sendMessage({ from, group_id, message, type }: MessageCreateDTO) {
+    const { data } = await axios.post(
+      `${BASE_URL_API}/message`,
+      {
+        from,
+        group_id,
+        message,
+        type,
+      },
+      {
+        ...bearerHeader(),
+      },
+    );
+    const result: MessageCreateResponseInterface = data;
     return result;
   }
 }

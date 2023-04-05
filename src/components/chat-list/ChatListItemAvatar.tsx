@@ -1,11 +1,7 @@
 import { Avatar } from '@mantine/core';
 
 function ChatListItemAvatar({ avatar }: { avatar?: string }) {
-  if (avatar) {
-    <Avatar radius="xl" src={avatar} />;
-  }
-
-  return <Avatar radius="xl" />;
+  return <Avatar radius="xl" size="lg" src={avatar} />;
 }
 
 ChatListItemAvatar.defaultProps = {

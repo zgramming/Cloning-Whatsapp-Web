@@ -10,6 +10,7 @@ import {
   IconSettings,
   IconUsersGroup,
 } from '@tabler/icons-react';
+import { AuthContext } from '@/context/AuthContext';
 import { DrawerNavigationStackContext } from '@/context/DrawerNavigationStackContext';
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
 import API from '@/utils/api';
@@ -18,6 +19,15 @@ import { routes } from '@/utils/routes';
 import DrawerChat from '../drawer/DrawerChat';
 import DrawerSetting from '../drawer/DrawerSetting';
 
+function ChatListHeaderAvatar() {
+  const { user } = useContext(AuthContext);
+  return (
+    <Tooltip label="Coming Soon">
+      <Avatar radius="xl" size="md" src={user?.avatar} className="hover:cursor-pointer" />
+    </Tooltip>
+  );
+}
+
 function ChatListHeader() {
   const { push } = useContext(DrawerNavigationStackContext);
   const { replace } = useRouter();
@@ -25,9 +35,7 @@ function ChatListHeader() {
   return (
     <div className="h-16 bg-gray-100 px-5 py-3">
       <div className="flex flex-row items-center h-full">
-        <Tooltip label="Coming Soon">
-          <Avatar radius="xl" className="hover:cursor-pointer" />
-        </Tooltip>
+        <ChatListHeaderAvatar />
         <div className="grow flex flex-wrap justify-end gap-5">
           <Tooltip label="Coming Soon">
             <ActionIcon>
@@ -39,7 +47,7 @@ function ChatListHeader() {
               <IconHistoryToggle />
             </ActionIcon>
           </Tooltip>
-          <Tooltip label="Coming Soon">
+          <Tooltip label="Pesan Baru">
             <ActionIcon
               onClick={() => {
                 push(<DrawerChat key="DrawerChat" />);

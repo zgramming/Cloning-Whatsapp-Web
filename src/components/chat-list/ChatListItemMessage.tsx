@@ -2,13 +2,12 @@ import { useContext } from 'react';
 
 import { IconCheck } from '@tabler/icons-react';
 import { AuthContext } from '@/context/AuthContext';
-import { MyGroup } from '@/interface/group/my-group.response.interface';
+import { MyGroup } from '@/interface/group/group.me.interface';
 
 function ChatListItemMessageDetail({ group }: { group: MyGroup }) {
   const { user: userLogin } = useContext(AuthContext);
 
   const isGroup = group.type === 'GROUP';
-
   if (isGroup) {
     if (group.last_sender === userLogin?.id) {
       return (
@@ -20,7 +19,7 @@ function ChatListItemMessageDetail({ group }: { group: MyGroup }) {
     }
   }
 
-  if (group.interlocutors?.id === userLogin?.id) {
+  if (group.last_sender === userLogin?.id) {
     return <IconCheck size="1rem" />;
   }
 
