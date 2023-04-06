@@ -15,9 +15,10 @@ Cloning Whatsapp Web
 - [x] Login
 - [x] Register
 - [x] Private Group
+- [x] Search person by phone number
 - [x] Realtime Chat
 - [x] Realtime indicator user is typing
-- [x] Search person by phone number
+- [x] Realtime notify when user invited by another user to group
 
 ## Environment Variables
 
