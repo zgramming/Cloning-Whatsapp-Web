@@ -60,7 +60,8 @@ Install application with NPM
 
 ## Demo
 
-https://user-images.githubusercontent.com/38829404/230265156-e09a9c9d-ac1d-4b52-9c70-60b76a489466.mp4
+https://user-images.githubusercontent.com/38829404/230294228-776658d7-84d5-4e35-8012-c533bce2d835.mp4
+
 
 ## Roadmap
 
