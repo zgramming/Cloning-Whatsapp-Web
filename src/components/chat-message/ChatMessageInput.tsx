@@ -1,6 +1,6 @@
 import { ChangeEvent, useContext, useState } from 'react';
 
-import { ActionIcon, LoadingOverlay, TextInput, Tooltip } from '@mantine/core';
+import { ActionIcon, TextInput, Tooltip } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconMicrophone, IconMoodHappy, IconPaperclip, IconSend } from '@tabler/icons-react';
 import { AuthContext } from '@/context/AuthContext';
@@ -13,7 +13,6 @@ import { errorHandler } from '@/utils/error-handler';
 
 function ChatMessageInput() {
   const [timeoutFN, setTimeoutFN] = useState<NodeJS.Timeout | undefined>();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
   const [isTyping, setIsTyping] = useState<boolean>(false);
 
@@ -56,7 +55,6 @@ function ChatMessageInput() {
     try {
       if (!message) return;
 
-      setIsLoading(true);
       const result = await dispatch(
         asyncSendMessage({ from: user?.id || '', group_id: groupId || '', message, type: 'TEXT' }),
       ).unwrap();
@@ -72,6 +70,13 @@ function ChatMessageInput() {
       /// Emit message to socket io
       emitSendMessage(result);
 
+      /// Scroll to bottom chat message list
+      const bottomChatMessage = document.getElementById('bottom-chat-message');
+      if (bottomChatMessage) {
+        bottomChatMessage.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      /// Show notification
       notifications.show({
         title: 'Success',
         message: result.message,
@@ -84,8 +89,6 @@ function ChatMessageInput() {
         message: result.message,
         color: 'red',
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -97,7 +100,6 @@ function ChatMessageInput() {
 
   return (
     <div className="flex flex-row items-center bg-gray-100 gap-5 p-5">
-      <LoadingOverlay visible={isLoading} overlayBlur={2} />
       <div className="flex flex-wrap gap-3">
         <ActionIcon>
           <Tooltip label="Coming soon">

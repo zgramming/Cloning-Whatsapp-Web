@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
 import { useAppDispatch, useAppSelector } from '@/hooks/use-dispatch-selector';
@@ -11,12 +11,25 @@ import ChatMessageInput from './ChatMessageInput';
 import ChatMessageItem from './ChatMessageItem';
 
 function ChatMessageItems({ messages }: { messages: GroupDetailMessage[] }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    ref.current?.scrollIntoView({ behavior: 'auto' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, []);
+
   return (
-    <div className="grow flex flex-col justify-end gap-5 p-5 overflow-auto">
-      {messages.map((message) => (
-        <ChatMessageItem key={message.id} message={message} />
-      ))}
-    </div>
+    <>
+      <div className="grow flex flex-col justify-end gap-5 p-5">
+        {messages.map((message) => (
+          <ChatMessageItem key={message.id} message={message} />
+        ))}
+      </div>
+      <div ref={ref} id="bottom-chat-message" />
+    </>
   );
 }
 
@@ -50,7 +63,9 @@ function ChatMessage() {
   return (
     <div className="grow flex flex-col">
       <ChatMessageHeader groupDetail={detailGroup} />
-      <ChatMessageItems messages={messages} />
+      <div className="overflow-auto">
+        <ChatMessageItems messages={messages} />
+      </div>
       <ChatMessageInput />
     </div>
   );
