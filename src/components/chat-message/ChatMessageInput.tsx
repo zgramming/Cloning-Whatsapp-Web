@@ -70,12 +70,6 @@ function ChatMessageInput() {
       /// Emit message to socket io
       emitSendMessage(result);
 
-      /// Scroll to bottom chat message list
-      const bottomChatMessage = document.getElementById('bottom-chat-message');
-      if (bottomChatMessage) {
-        bottomChatMessage.scrollIntoView({ behavior: 'smooth' });
-      }
-
       /// Show notification
       notifications.show({
         title: 'Success',

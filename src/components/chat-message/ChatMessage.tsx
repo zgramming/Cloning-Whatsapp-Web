@@ -1,37 +1,14 @@
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect } from 'react';
 
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
 import { useAppDispatch, useAppSelector } from '@/hooks/use-dispatch-selector';
-import { GroupDetailMessage } from '@/interface/group/group.detail.interface';
 import { asyncGroupDetail } from '@/redux-toolkit/feature/group/group.thunk';
+import { scrollToBottomMessageChat } from '@/utils/function';
 
 import ChatMessageSkeleton from '../skeleton/ChatMessageSkeleton';
 import ChatMessageHeader from './ChatMessageHeader';
 import ChatMessageInput from './ChatMessageInput';
-import ChatMessageItem from './ChatMessageItem';
-
-function ChatMessageItems({ messages }: { messages: GroupDetailMessage[] }) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  const scrollToBottom = () => {
-    ref.current?.scrollIntoView({ behavior: 'auto' });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, []);
-
-  return (
-    <>
-      <div className="grow flex flex-col justify-end gap-5 p-5">
-        {messages.map((message) => (
-          <ChatMessageItem key={message.id} message={message} />
-        ))}
-      </div>
-      <div ref={ref} id="bottom-chat-message" />
-    </>
-  );
-}
+import ChatMessageItems from './ChatMessageItems';
 
 function ChatMessage() {
   const { id: groupId } = useContext(SelectedChatListContext);
@@ -45,6 +22,14 @@ function ChatMessage() {
 
     return () => {};
   }, [dispatch, groupId]);
+
+  /// Every time messages change, scroll to bottom
+  useEffect(() => {
+    if (detailGroup?.messages) {
+      scrollToBottomMessageChat();
+    }
+    return () => {};
+  }, [detailGroup?.messages]);
 
   if (!groupId) {
     return (
