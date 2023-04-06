@@ -1,49 +1,39 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Message, MessageInterface } from '@/interface/message/message.interface';
-import API from '@/utils/api';
-import { errorHandler } from '@/utils/error-handler';
+import { createSlice } from '@reduxjs/toolkit';
 
 type SliceType = {
-  items: Message[];
-  loading: boolean;
-  error?: string;
+  messageTyping: {
+    group_id: string | undefined;
+    name: string | undefined;
+    is_typing: boolean;
+  };
 };
 
 const initialState: SliceType = {
-  items: [],
-  loading: true,
-  error: undefined,
+  messageTyping: {
+    name: undefined,
+    group_id: undefined,
+    is_typing: false,
+  },
 };
-
-export const asyncMessage = createAsyncThunk('message/asyncMessage', async (groupId: string, { rejectWithValue }) => {
-  try {
-    const result = await API.getMessageByGroupId(groupId);
-    return result;
-  } catch (error) {
-    const err = errorHandler(error);
-    return rejectWithValue(err.message);
-  }
-});
 
 const messageSlice = createSlice({
   initialState,
   name: 'message',
-  reducers: {},
-  extraReducers: (builder) => {
-    builder.addCase(asyncMessage.pending, (state) => {
-      state.loading = true;
-      state.error = undefined;
-    });
-    builder.addCase(asyncMessage.fulfilled, (state, action) => {
-      state.loading = false;
-      const items: MessageInterface = action.payload;
-      state.items = [...items.data];
-    });
-    builder.addCase(asyncMessage.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    });
+  reducers: {
+    updateMessageTyping: (state, action) => {
+      const { group_id: groupId, name, is_typing: isTyping } = action.payload;
+      state.messageTyping.name = name;
+      state.messageTyping.group_id = groupId;
+      state.messageTyping.is_typing = isTyping;
+    },
+    resetMessageTyping: (state) => {
+      state.messageTyping.name = undefined;
+      state.messageTyping.is_typing = false;
+      state.messageTyping.group_id = undefined;
+    },
   },
 });
+
+export const { updateMessageTyping, resetMessageTyping } = messageSlice.actions;
 
 export default messageSlice.reducer;

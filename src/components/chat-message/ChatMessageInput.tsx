@@ -12,8 +12,10 @@ import { asyncSendMessage } from '@/redux-toolkit/feature/message/message.thunk'
 import { errorHandler } from '@/utils/error-handler';
 
 function ChatMessageInput() {
+  const [timeoutFN, setTimeoutFN] = useState<NodeJS.Timeout | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
+  const [isTyping, setIsTyping] = useState<boolean>(false);
 
   const { user } = useContext(AuthContext);
   const { id: groupId } = useContext(SelectedChatListContext);
@@ -23,12 +25,30 @@ function ChatMessageInput() {
 
   const dispatch = useAppDispatch();
 
+  const onTypingHandler = () => {
+    const clearTyping = () => {
+      emitTyping({ name: user?.name || '', group_id: groupId || '', is_typing: false });
+      setIsTyping(false);
+    };
+
+    if (!isTyping) {
+      setIsTyping(true);
+      emitTyping({
+        name: user?.name || '',
+        group_id: groupId || '',
+        is_typing: true,
+      });
+
+      setTimeoutFN(setTimeout(clearTyping, 3000));
+    } else {
+      clearTimeout(timeoutFN);
+      setTimeoutFN(setTimeout(clearTyping, 3000));
+    }
+  };
+
   const onChangeText = (e: ChangeEvent<HTMLInputElement>) => {
-    emitTyping({
-      groupId: groupId || '',
-      userId: user?.id || '',
-      message: e.currentTarget.value,
-    });
+    /// Emit typing
+    onTypingHandler();
     setMessage(e.currentTarget.value);
   };
 
@@ -69,6 +89,12 @@ function ChatMessageInput() {
     }
   };
 
+  const onEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onSendMessageHandler();
+    }
+  };
+
   return (
     <div className="flex flex-row items-center bg-gray-100 gap-5 p-5">
       <LoadingOverlay visible={isLoading} overlayBlur={2} />
@@ -85,7 +111,7 @@ function ChatMessageInput() {
         </ActionIcon>
       </div>
       <div className="grow">
-        <TextInput placeholder="Tuliskan sebuah pesan" value={message} onChange={onChangeText} />
+        <TextInput placeholder="Tuliskan sebuah pesan" value={message} onChange={onChangeText} onKeyDown={onEnter} />
       </div>
       <div className="flex flex-wrap gap-3">
         <ActionIcon>

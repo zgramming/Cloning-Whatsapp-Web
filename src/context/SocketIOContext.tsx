@@ -5,15 +5,15 @@ import { MessageCreateResponseInterface } from '@/interface/message/message.crea
 import {
   BASE_URL_API,
   EMIT_EVENT_CONNECT,
-  EMIT_EVENT_DISCONNECT,
+  EMIT_EVENT_CUSTOM_DISCONNECT,
   EMIT_EVENT_SEND_MESSAGE,
   EMIT_EVENT_TYPING,
 } from '@/utils/constant';
 
-type EmitEventTypingType = {
-  userId: string;
-  message: string;
-  groupId: string;
+export type EmitEventTypingType = {
+  name: string;
+  group_id: string;
+  is_typing: boolean;
 };
 
 type ContextType = {
@@ -70,7 +70,7 @@ function SocketIOProvider({ children }: any) {
       },
       disconnect(userId) {
         if (socket) {
-          socket.emit(EMIT_EVENT_DISCONNECT, userId);
+          socket.emit(EMIT_EVENT_CUSTOM_DISCONNECT, userId);
           socket.disconnect();
         }
       },

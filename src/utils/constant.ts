@@ -4,8 +4,8 @@ export const KEY_COOKIES_USER = process.env.NEXT_PUBLIC_KEY_COOKIES_USER || 'use
 
 // Socket IO Emmit Event
 export const EMIT_EVENT_CONNECT = 'connected';
-export const EMIT_EVENT_DISCONNECT = 'disconnected';
+export const EMIT_EVENT_DISCONNECT = 'disconnect';
+export const EMIT_EVENT_CUSTOM_DISCONNECT = 'custom_disconnected';
 export const EMIT_EVENT_TYPING = 'typing';
 export const EMIT_EVENT_SEND_MESSAGE = 'send_message';
-
 // Path: src\utils\constant.ts
