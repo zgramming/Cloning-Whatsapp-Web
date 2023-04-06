@@ -60,7 +60,7 @@ Install application with NPM
 
 ## Demo
 
-Insert gif or link to demo
+https://user-images.githubusercontent.com/38829404/230265156-e09a9c9d-ac1d-4b52-9c70-60b76a489466.mp4
 
 ## Roadmap
 
