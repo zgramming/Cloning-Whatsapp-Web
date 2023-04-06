@@ -38,7 +38,11 @@ const groupSlice = createSlice({
 
       const index = state.items.findIndex((item) => item.id === data.group_id);
       if (index !== -1) {
-        state.items[index].last_msg = data.message;
+        state.items[index] = {
+          ...state.items[index],
+          last_msg: data.message,
+          last_sender: data.from,
+        };
       }
     },
     addMessageToGroupDetail: (state, action) => {
