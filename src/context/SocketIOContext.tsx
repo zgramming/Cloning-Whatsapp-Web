@@ -21,6 +21,8 @@ type ContextType = {
   connect: (userId: string) => void;
   disconnect: (userId: string) => void;
   typing: (data: EmitEventTypingType) => void;
+  listenTyping: (callback: (data: EmitEventTypingType) => void) => void;
+  listenSendMessage: (callback: (data: MessageCreateResponseInterface) => void) => void;
   sendMessage: (data: MessageCreateResponseInterface) => void;
 };
 
@@ -29,6 +31,8 @@ const defaultValue: ContextType = {
   connect: () => {},
   disconnect: () => {},
   typing: () => {},
+  listenTyping() {},
+  listenSendMessage() {},
   sendMessage: () => {},
 };
 
@@ -36,6 +40,7 @@ export const SocketIOContext = createContext(defaultValue);
 
 function SocketIOProvider({ children }: any) {
   const [socket, setSocket] = useState<Socket | undefined>(undefined);
+  const [alreadyConnect, setAlreadyConnect] = useState<boolean>(false);
 
   useEffect(() => {
     const config = io(BASE_URL_API || '', {
@@ -45,7 +50,7 @@ function SocketIOProvider({ children }: any) {
     setSocket(config);
 
     return () => {
-      config.close();
+      config.disconnect();
     };
   }, []);
 
@@ -56,6 +61,7 @@ function SocketIOProvider({ children }: any) {
         if (socket) {
           socket.connect();
           socket.emit(EMIT_EVENT_CONNECT, userId);
+          setAlreadyConnect(true);
         }
       },
       typing(data) {
@@ -68,6 +74,16 @@ function SocketIOProvider({ children }: any) {
           socket.emit(EMIT_EVENT_SEND_MESSAGE, data);
         }
       },
+      listenTyping(callback: (data: EmitEventTypingType) => void) {
+        if (socket && !alreadyConnect) {
+          socket.on(EMIT_EVENT_TYPING, callback);
+        }
+      },
+      listenSendMessage(callback) {
+        if (socket && !alreadyConnect) {
+          socket.on(EMIT_EVENT_SEND_MESSAGE, callback);
+        }
+      },
       disconnect(userId) {
         if (socket) {
           socket.emit(EMIT_EVENT_CUSTOM_DISCONNECT, userId);
@@ -75,7 +91,7 @@ function SocketIOProvider({ children }: any) {
         }
       },
     }),
-    [socket],
+    [alreadyConnect, socket],
   );
 
   return <SocketIOContext.Provider value={value}>{children}</SocketIOContext.Provider>;
