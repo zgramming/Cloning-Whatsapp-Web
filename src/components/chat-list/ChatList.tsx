@@ -1,40 +1,8 @@
-import { useEffect } from 'react';
-
-import { useAppDispatch, useAppSelector } from '@/hooks/use-dispatch-selector';
-import { asyncMyGroup } from '@/redux-toolkit/feature/group/group.thunk';
-
 import DrawerCustom from '../DrawerCustom';
-import ChatListSkeleton from '../skeleton/ChatListSkeleton';
 import ChatListArchiveAction from './ChatListArchiveAction';
 import ChatListHeader from './ChatListHeader';
-import ChatListItem from './ChatListItem';
+import ChatListItems from './ChatListItems';
 import ChatListSearch from './ChatListSearch';
-
-function ChatListItems() {
-  const dispatch = useAppDispatch();
-  const { items, loading, error } = useAppSelector((state) => state.group);
-
-  useEffect(() => {
-    dispatch(asyncMyGroup());
-    return () => {};
-  }, [dispatch]);
-
-  if (loading) {
-    return <ChatListSkeleton />;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
-  return (
-    <>
-      {items.map((group) => (
-        <ChatListItem key={group.id} group={group} />
-      ))}
-    </>
-  );
-}
 
 function ChatList() {
   return (

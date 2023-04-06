@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { getCookie, removeCookies, setCookie } from 'cookies-next';
 
+import { ContactCreateResponseInterface } from '@/interface/contact/contact.create-response.interface';
+import { ContactMeInterface } from '@/interface/contact/contact.me.interface';
+import { ContactCreateDTO } from '@/interface/dto/contact.create.dto';
 import { LoginDTO } from '@/interface/dto/login.dto';
 import { MessageCreateDTO } from '@/interface/dto/message.create.dto';
 import { RegisterDTO } from '@/interface/dto/register.dto';
@@ -132,6 +135,31 @@ class API {
       },
     );
     const result: MessageCreateResponseInterface = data;
+    return result;
+  }
+
+  // Contact
+
+  static async getMyContact() {
+    const { data } = await axios.get(`${BASE_URL_API}/contact/me`, {
+      ...bearerHeader(),
+    });
+    const result: ContactMeInterface = data;
+    return result;
+  }
+
+  static async addContact({ groupId, userId }: ContactCreateDTO) {
+    const { data } = await axios.post(
+      `${BASE_URL_API}/contact`,
+      {
+        group_id: groupId,
+        user_id: userId,
+      },
+      {
+        ...bearerHeader(),
+      },
+    );
+    const result: ContactCreateResponseInterface = data;
     return result;
   }
 }

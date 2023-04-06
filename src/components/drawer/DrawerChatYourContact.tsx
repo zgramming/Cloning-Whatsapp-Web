@@ -1,30 +1,25 @@
-import { useContext, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 
 import { Avatar } from '@mantine/core';
-import { IconUsers } from '@tabler/icons-react';
 import { DrawerNavigationStackContext } from '@/context/DrawerNavigationStackContext';
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
-import { useAppSelector } from '@/hooks/use-dispatch-selector';
+import { useAppDispatch, useAppSelector } from '@/hooks/use-dispatch-selector';
+import { asyncGetMyContact } from '@/redux-toolkit/feature/contact/contact.thunk';
+import { PATH_DEFAULT_IMAGE } from '@/utils/constant';
 
 import DrawerChatTile from './DrawerChatTile';
 
 function DrawerChatYourContact() {
   const { popAll: closeAllDrawerStack } = useContext(DrawerNavigationStackContext);
-  const { setId } = useContext(SelectedChatListContext);
+  const { setId: emitGroupId } = useContext(SelectedChatListContext);
 
-  const groups = useAppSelector((state) => state.group.items);
-  const groupedGroupedByFirstLetter = useMemo(() => {
+  const groups = useAppSelector((state) => state.contact.items);
+  const dispatch = useAppDispatch();
+
+  const groupedContactByFirstChar = useMemo(() => {
     const grouped = groups.reduce((acc, curr) => {
-      let firstLetter = '';
-
-      // Get first letter of group name or first letter of group member name
-      if (curr.type === 'GROUP') {
-        const first = curr.name.toUpperCase()[0];
-        firstLetter = first;
-      } else {
-        const first = curr.interlocutors?.name.toUpperCase()[0] ?? '';
-        firstLetter = first;
-      }
+      // Get First Character of name
+      const firstLetter = curr.user.name[0].toUpperCase();
 
       // Group by first letter
       if (acc[firstLetter]) {
@@ -38,37 +33,28 @@ function DrawerChatYourContact() {
     return Object.entries(grouped).sort((a, b) => a[0].localeCompare(b[0]));
   }, [groups]);
 
+  useEffect(() => {
+    dispatch(asyncGetMyContact());
+    return () => {};
+  }, [dispatch]);
+
   return (
     <div className="flex flex-col">
       <h3 className="p-3 font-semibold">Kontak Kamu</h3>
-      {groupedGroupedByFirstLetter.map(([firstLetter, items]) => (
+      {groupedContactByFirstChar.map(([firstLetter, contacts]) => (
         <div key={firstLetter} className="flex flex-col">
           <h3 className="px-5 text-primary-teal font-normal">{firstLetter}</h3>
-          {items.map((group) => {
-            const { id, name: nameGroup, group_member: groupMember } = group;
-            const [firstMember] = groupMember;
-            if (group.type === 'GROUP') {
-              return (
-                <DrawerChatTile
-                  key={id}
-                  name={nameGroup}
-                  avatar={
-                    <Avatar radius="xl" size="lg" color="green">
-                      <IconUsers size="1.5rem" />
-                    </Avatar>
-                  }
-                />
-              );
-            }
+          {contacts.map((contact) => {
+            const { id, user, group_id: groupId } = contact;
 
             return (
               <DrawerChatTile
                 key={id}
-                avatar={<Avatar radius="xl" size="lg" color="green" />}
-                name={firstMember.user.name}
+                avatar={<Avatar radius="xl" size="md" color="green" src={user.avatar || PATH_DEFAULT_IMAGE} />}
+                name={user.name}
                 onClick={() => {
                   closeAllDrawerStack();
-                  setId(id);
+                  emitGroupId(groupId);
                 }}
               />
             );

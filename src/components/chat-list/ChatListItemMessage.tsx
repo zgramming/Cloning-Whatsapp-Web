@@ -42,7 +42,7 @@ function ChatListItemMessage({ group }: { group: MyGroup }) {
   const name = isGroup ? group.name : group.interlocutors?.name;
 
   return (
-    <div className="grow flex flex-col gap-2">
+    <div className="grow flex flex-col gap-2 px-2">
       <div className="text-base">{name}</div>
       <div className="flex flex-row items-center gap-1 text-xs text-gray-500">
         <ChatListItemMessageIndicator group={group} />

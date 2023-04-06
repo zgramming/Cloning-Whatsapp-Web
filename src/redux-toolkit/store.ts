@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
+import contactSlice from './feature/contact/contact.slice';
 import groupSlice from './feature/group/group.slice';
 import messageSlice from './feature/message/message.slice';
 import userFilteredPhoneSlice from './feature/user/user-filtered-phone.slice';
@@ -8,6 +9,7 @@ export const store = configureStore({
   reducer: {
     group: groupSlice,
     message: messageSlice,
+    contact: contactSlice,
     userFilteredPhone: userFilteredPhoneSlice,
   },
 });
