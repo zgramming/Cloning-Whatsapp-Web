@@ -48,7 +48,7 @@ function ChatMessage() {
   return (
     <div className="grow flex flex-col">
       <ChatMessageHeader groupDetail={detailGroup} />
-      <div className="overflow-auto">
+      <div className="grow overflow-auto">
         <ChatMessageItems messages={messages} />
       </div>
       <ChatMessageInput />

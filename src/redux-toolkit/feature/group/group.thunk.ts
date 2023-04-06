@@ -33,8 +33,6 @@ export const asyncMyGroup = createAsyncThunk('group/myGroup', async (_, { dispat
     dispatch(setLoadingMyGroup(true));
     const result = await API.getMyGroup();
 
-    console.log({ result });
-
     dispatch(initializeMyGroup(result));
     return result;
   } catch (error) {

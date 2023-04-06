@@ -6,6 +6,7 @@ import {
   BASE_URL_API,
   EMIT_EVENT_CONNECT,
   EMIT_EVENT_CUSTOM_DISCONNECT,
+  EMIT_EVENT_INVITE_NEW_GROUP,
   EMIT_EVENT_SEND_MESSAGE,
   EMIT_EVENT_TYPING,
 } from '@/utils/constant';
@@ -16,24 +17,33 @@ export type EmitEventTypingType = {
   is_typing: boolean;
 };
 
+export type EmitEventInviteNewGroupType = {
+  group_id: string;
+  invited_by: string;
+};
+
 type ContextType = {
   socket: Socket | undefined;
   connect: (userId: string) => void;
-  disconnect: (userId: string) => void;
   typing: (data: EmitEventTypingType) => void;
+  sendMessage: (data: MessageCreateResponseInterface) => void;
+  inviteNewGroup: (data: EmitEventInviteNewGroupType) => void;
   listenTyping: (callback: (data: EmitEventTypingType) => void) => void;
   listenSendMessage: (callback: (data: MessageCreateResponseInterface) => void) => void;
-  sendMessage: (data: MessageCreateResponseInterface) => void;
+  listenInviteNewGroup: (callback: (data: EmitEventInviteNewGroupType) => void) => void;
+  disconnect: (userId: string) => void;
 };
 
 const defaultValue: ContextType = {
   socket: undefined,
-  connect: () => {},
-  disconnect: () => {},
-  typing: () => {},
+  connect() {},
+  typing() {},
+  sendMessage() {},
+  inviteNewGroup() {},
   listenTyping() {},
   listenSendMessage() {},
-  sendMessage: () => {},
+  listenInviteNewGroup() {},
+  disconnect() {},
 };
 
 export const SocketIOContext = createContext(defaultValue);
@@ -74,6 +84,11 @@ function SocketIOProvider({ children }: any) {
           socket.emit(EMIT_EVENT_SEND_MESSAGE, data);
         }
       },
+      inviteNewGroup(data) {
+        if (socket) {
+          socket.emit(EMIT_EVENT_INVITE_NEW_GROUP, data);
+        }
+      },
       listenTyping(callback: (data: EmitEventTypingType) => void) {
         if (socket && !alreadyConnect) {
           socket.on(EMIT_EVENT_TYPING, callback);
@@ -82,6 +97,11 @@ function SocketIOProvider({ children }: any) {
       listenSendMessage(callback) {
         if (socket && !alreadyConnect) {
           socket.on(EMIT_EVENT_SEND_MESSAGE, callback);
+        }
+      },
+      listenInviteNewGroup(callback) {
+        if (socket && !alreadyConnect) {
+          socket.on(EMIT_EVENT_INVITE_NEW_GROUP, callback);
         }
       },
       disconnect(userId) {

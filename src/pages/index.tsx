@@ -5,16 +5,16 @@ import ChatContainer from '@/components/ChatContainer';
 import NavHeader from '@/components/NavHeader';
 import { AuthContext } from '@/context/AuthContext';
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
-import { EmitEventTypingType, SocketIOContext } from '@/context/SocketIOContext';
+import { SocketIOContext } from '@/context/SocketIOContext';
 import { useAppDispatch } from '@/hooks/use-dispatch-selector';
-import { MessageCreateResponseInterface } from '@/interface/message/message.create-response.interface';
 import { addMessageToGroupDetail, updateLastMessageGroup } from '@/redux-toolkit/feature/group/group.slice';
+import { asyncMyGroup } from '@/redux-toolkit/feature/group/group.thunk';
 import { resetMessageTyping, updateMessageTyping } from '@/redux-toolkit/feature/message/message.slice';
 import { scrollToBottomMessageChat } from '@/utils/function';
 
 export default function Home() {
   const { user } = useContext(AuthContext);
-  const { connect, disconnect, listenTyping, listenSendMessage } = useContext(SocketIOContext);
+  const { connect, disconnect, listenTyping, listenSendMessage, listenInviteNewGroup } = useContext(SocketIOContext);
   const { id: selectedChatGroupId } = useContext(SelectedChatListContext);
   const dispatch = useAppDispatch();
 
@@ -22,7 +22,7 @@ export default function Home() {
     if (user) {
       connect(user.id);
 
-      listenTyping((data: EmitEventTypingType) => {
+      listenTyping((data) => {
         const { name, group_id: groupId, is_typing: isTyping } = data;
 
         if (isTyping) {
@@ -38,13 +38,21 @@ export default function Home() {
         }
       });
 
-      listenSendMessage((data: MessageCreateResponseInterface) => {
+      listenSendMessage((data) => {
         dispatch(updateLastMessageGroup(data));
         dispatch(addMessageToGroupDetail(data));
 
         if (selectedChatGroupId) {
           scrollToBottomMessageChat();
         }
+      });
+
+      // Listen invite new group from other user, then re-fetch my group
+      listenInviteNewGroup(() => {
+        // const { invited_by: invitedBy, group_id: groupId } = data;
+        // console.log(`You have been invited to join group ${groupId} by ${invitedBy}`);
+
+        dispatch(asyncMyGroup());
       });
     }
 
@@ -53,7 +61,7 @@ export default function Home() {
         disconnect(user.id);
       }
     };
-  }, [connect, disconnect, dispatch, listenSendMessage, listenTyping, selectedChatGroupId, user]);
+  }, [connect, disconnect, dispatch, listenInviteNewGroup, listenSendMessage, listenTyping, selectedChatGroupId, user]);
 
   return (
     <>

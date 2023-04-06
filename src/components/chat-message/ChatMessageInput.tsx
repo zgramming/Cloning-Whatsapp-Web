@@ -18,7 +18,11 @@ function ChatMessageInput() {
 
   const { user } = useContext(AuthContext);
   const { id: groupId } = useContext(SelectedChatListContext);
-  const { typing: emitTyping, sendMessage: emitSendMessage } = useContext(SocketIOContext);
+  const {
+    typing: emitTyping,
+    sendMessage: emitSendMessage,
+    inviteNewGroup: emitInviteNewGroup,
+  } = useContext(SocketIOContext);
 
   const messages = useAppSelector((state) => state.group.detail.data?.messages ?? []);
 
@@ -62,9 +66,15 @@ function ChatMessageInput() {
       /// reset message
       setMessage('');
 
+      const isNewChat = messages.length === 0;
+
       /// Update group list with new user when is first time chat
-      if (messages.length === 0) {
+      if (isNewChat) {
         await dispatch(asyncMyGroup()).unwrap();
+        emitInviteNewGroup({
+          group_id: groupId || '',
+          invited_by: user?.id || '',
+        });
       }
 
       /// Emit message to socket io
