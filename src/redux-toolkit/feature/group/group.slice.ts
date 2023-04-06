@@ -3,8 +3,6 @@ import { GroupDetail, GroupDetailInterface } from '@/interface/group/group.detai
 import { MyGroup, MyGroupInterface } from '@/interface/group/group.me.interface';
 import { MessageCreateResponseInterface } from '@/interface/message/message.create-response.interface';
 
-import { asyncGroupDetail, asyncMyGroup } from './group.thunk';
-
 type SliceType = {
   items: MyGroup[];
   loading: boolean;
@@ -32,6 +30,28 @@ const groupSlice = createSlice({
   initialState,
   name: 'inbox',
   reducers: {
+    initializeMyGroup: (state, action) => {
+      const { data }: MyGroupInterface = action.payload;
+      state.items = [...data];
+    },
+    setLoadingMyGroup: (state, action) => {
+      state.loading = action.payload;
+    },
+    setErrorMyGroup: (state, action) => {
+      state.error = action.payload as string;
+    },
+
+    initializeDetailGroup: (state, action) => {
+      const { data }: GroupDetailInterface = action.payload;
+      state.detail.data = data;
+    },
+    setLoadingDetailGroup: (state, action) => {
+      state.detail.loading = action.payload;
+    },
+    setErrorDetailGroup: (state, action) => {
+      state.detail.error = action.payload as string;
+    },
+
     updateLastMessageGroup: (state, action) => {
       const response: MessageCreateResponseInterface = action.payload;
       const { data } = response;
@@ -55,39 +75,19 @@ const groupSlice = createSlice({
       state.detail.data?.messages.push({ ...data });
     },
   },
-  extraReducers: (builder) => {
-    /// my group
-    builder.addCase(asyncMyGroup.pending, (state) => {
-      state.loading = true;
-      state.error = undefined;
-    });
-    builder.addCase(asyncMyGroup.fulfilled, (state, action) => {
-      state.loading = false;
-      const items: MyGroupInterface = action.payload;
-      state.items = [...items.data];
-    });
-    builder.addCase(asyncMyGroup.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    });
-
-    /// detail group
-    builder.addCase(asyncGroupDetail.pending, (state) => {
-      state.detail.loading = true;
-      state.detail.error = undefined;
-    });
-    builder.addCase(asyncGroupDetail.fulfilled, (state, action) => {
-      state.detail.loading = false;
-      const response: GroupDetailInterface = action.payload;
-      state.detail.data = response.data;
-    });
-    builder.addCase(asyncGroupDetail.rejected, (state, action) => {
-      state.detail.loading = false;
-      state.detail.error = action.payload as string;
-    });
-  },
 });
 
-export const { updateLastMessageGroup, addMessageToGroupDetail } = groupSlice.actions;
+export const {
+  initializeMyGroup,
+  setErrorMyGroup,
+  setLoadingMyGroup,
+
+  initializeDetailGroup,
+  setErrorDetailGroup,
+  setLoadingDetailGroup,
+
+  updateLastMessageGroup,
+  addMessageToGroupDetail,
+} = groupSlice.actions;
 
 export default groupSlice.reducer;
