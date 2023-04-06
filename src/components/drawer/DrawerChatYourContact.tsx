@@ -1,10 +1,17 @@
+import { useContext, useMemo } from 'react';
+
 import { Avatar } from '@mantine/core';
 import { IconUsers } from '@tabler/icons-react';
-import { useMemo } from 'react';
+import { DrawerNavigationStackContext } from '@/context/DrawerNavigationStackContext';
+import { SelectedChatListContext } from '@/context/SelectedChatListContext';
 import { useAppSelector } from '@/hooks/use-dispatch-selector';
+
 import DrawerChatTile from './DrawerChatTile';
 
 function DrawerChatYourContact() {
+  const { popAll: closeAllDrawerStack } = useContext(DrawerNavigationStackContext);
+  const { setId } = useContext(SelectedChatListContext);
+
   const groups = useAppSelector((state) => state.group.items);
   const groupedGroupedByFirstLetter = useMemo(() => {
     const grouped = groups.reduce((acc, curr) => {
@@ -37,10 +44,10 @@ function DrawerChatYourContact() {
       {groupedGroupedByFirstLetter.map(([firstLetter, items]) => (
         <div key={firstLetter} className="flex flex-col">
           <h3 className="px-5 text-primary-teal font-normal">{firstLetter}</h3>
-          {items.map((item) => {
-            const { id, name: nameGroup, group_member: groupMember } = item;
+          {items.map((group) => {
+            const { id, name: nameGroup, group_member: groupMember } = group;
             const [firstMember] = groupMember;
-            if (item.type === 'GROUP') {
+            if (group.type === 'GROUP') {
               return (
                 <DrawerChatTile
                   key={id}
@@ -59,6 +66,10 @@ function DrawerChatYourContact() {
                 key={id}
                 avatar={<Avatar radius="xl" size="lg" color="green" />}
                 name={firstMember.user.name}
+                onClick={() => {
+                  closeAllDrawerStack();
+                  setId(id);
+                }}
               />
             );
           })}
