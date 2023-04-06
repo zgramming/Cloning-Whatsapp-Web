@@ -20,7 +20,7 @@ module.exports = {
     },
   },
   // eslint-disable-next-line global-require
-  plugins: [require('@tailwindcss/line-clamp')],
+  plugins: [],
   corePlugins: {
     preflight: false,
   },
