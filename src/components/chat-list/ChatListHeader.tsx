@@ -2,14 +2,7 @@ import { useRouter } from 'next/router';
 import { useContext } from 'react';
 
 import { ActionIcon, Menu, Tooltip } from '@mantine/core';
-import {
-  IconDotsVertical,
-  IconHistoryToggle,
-  IconLogout,
-  IconMessage,
-  IconSettings,
-  IconUsersGroup,
-} from '@tabler/icons-react';
+import { IconDotsVertical, IconHistoryToggle, IconLogout, IconMessage, IconSettings } from '@tabler/icons-react';
 import { AuthContext } from '@/context/AuthContext';
 import { DrawerNavigationStackContext } from '@/context/DrawerNavigationStackContext';
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
