@@ -5,7 +5,7 @@ import { DrawerNavigationStackContext } from '@/context/DrawerNavigationStackCon
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
 import { useAppDispatch, useAppSelector } from '@/hooks/use-dispatch-selector';
 import { asyncGetMyContact } from '@/redux-toolkit/feature/contact/contact.thunk';
-import { PATH_DEFAULT_IMAGE } from '@/utils/constant';
+import { PATH_DEFAULT_ASSET_IMAGE } from '@/utils/constant';
 
 import DrawerChatTile from './DrawerChatTile';
 
@@ -50,7 +50,7 @@ function DrawerChatYourContact() {
             return (
               <DrawerChatTile
                 key={id}
-                avatar={<Avatar radius="xl" size="md" color="green" src={user.avatar || PATH_DEFAULT_IMAGE} />}
+                avatar={<Avatar radius="xl" size="md" color="green" src={user.avatar || PATH_DEFAULT_ASSET_IMAGE} />}
                 name={user.name}
                 onClick={() => {
                   closeAllDrawerStack();

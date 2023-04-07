@@ -47,4 +47,17 @@ export const asyncUserUpdateProfile = createAsyncThunk(
   },
 );
 
+export const asyncUserUpdateProfilePicture = createAsyncThunk(
+  'user/asyncUserUpdateProfilePicture',
+  async (file: File, { rejectWithValue }) => {
+    try {
+      const result = await API.updateProfilePicture(file);
+
+      return result;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  },
+);
+
 // Path: src\redux-toolkit\feature\user\user.thunk.ts

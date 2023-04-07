@@ -1,4 +1,4 @@
-interface RegisterResponseInterface {
+export interface RegisterResponseInterface {
   success: boolean;
   message: string;
   data: Data;
@@ -14,5 +14,3 @@ interface Data {
   created_at: Date;
   updated_at: Date;
 }
-
-export default RegisterResponseInterface;

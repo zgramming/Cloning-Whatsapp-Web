@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { ValidatorResponseInterface } from '@/interface/validator-response.interface';
 
-const errorHandler = (error: unknown) => {
+const errorHandler = (error: any) => {
   if (axios.isAxiosError(error)) {
     const response = error.response?.data;
 
@@ -17,11 +17,13 @@ const errorHandler = (error: unknown) => {
       };
     }
 
-    return {
+    const result = {
       success: false,
       data: null,
       message: response?.message,
     };
+
+    return result;
   }
 
   if (error instanceof Error) {
@@ -35,7 +37,7 @@ const errorHandler = (error: unknown) => {
   return {
     success: false,
     data: null,
-    message: 'Something went wrong',
+    message: error?.message || 'Something went wrong',
   };
 };
 

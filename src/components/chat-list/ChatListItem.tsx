@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
 import { MyGroup } from '@/interface/group/group.me.interface';
-import { PATH_DEFAULT_IMAGE } from '@/utils/constant';
+import { PATH_DEFAULT_ASSET_IMAGE } from '@/utils/constant';
 
 import ChatListItemAction from './ChatListItemAction';
 import ChatListItemAvatar from './ChatListItemAvatar';
@@ -25,7 +25,9 @@ function ChatListItem({ group, onRightClick }: ChatListItemType) {
   const { id, setId } = useContext(SelectedChatListContext);
 
   const isGroup = group.type === 'GROUP';
-  const srcAvatar = isGroup ? group.avatar || PATH_DEFAULT_IMAGE : group.interlocutors?.avatar || PATH_DEFAULT_IMAGE;
+  const srcAvatar = isGroup
+    ? group.avatar || PATH_DEFAULT_ASSET_IMAGE
+    : group.interlocutors?.avatar || PATH_DEFAULT_ASSET_IMAGE;
 
   return (
     <div

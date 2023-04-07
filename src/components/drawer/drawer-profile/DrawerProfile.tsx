@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 
 import { Card, Divider, List, Transition } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
@@ -7,8 +7,8 @@ import { IconEye, IconTrash, IconUpload } from '@tabler/icons-react';
 import ContextMenuItem from '@/components/ContextMenuItem';
 import { AuthContext } from '@/context/AuthContext';
 import { useAppDispatch } from '@/hooks/use-dispatch-selector';
-import { asyncUserUpdateProfile } from '@/redux-toolkit/feature/user/user.thunk';
-import { PATH_DEFAULT_IMAGE } from '@/utils/constant';
+import { asyncUserUpdateProfile, asyncUserUpdateProfilePicture } from '@/redux-toolkit/feature/user/user.thunk';
+import { BASE_URL_USER_PROFILE_IMAGE_API, PATH_DEFAULT_ASSET_IMAGE } from '@/utils/constant';
 import { errorHandler } from '@/utils/error-handler';
 
 import DrawerHeader from '../../DrawerHeader';
@@ -16,19 +16,60 @@ import DrawerProfileInputEdit from './DrawerProfileInputEdit';
 import DrawerProfileInputPreview from './DrawerProfileInputPreview';
 
 function DrawerProfileAvatar() {
+  const dispatch = useAppDispatch();
+  const { user, setUser } = useContext(AuthContext);
+
   const el = useRef<HTMLDivElement>(null);
+  const refFile = useRef<HTMLInputElement>(null);
+
   const [isOpen, setIsOpen] = useState(false);
   const [points, setPoints] = useState({
     x: 0,
     y: 0,
   });
-  const { user } = useContext(AuthContext);
+
+  const userImageUrl = user?.avatar ? `${BASE_URL_USER_PROFILE_IMAGE_API}/${user.avatar}` : PATH_DEFAULT_ASSET_IMAGE;
+
+  const onUploadHandler = async (e: ChangeEvent<HTMLInputElement>) => {
+    try {
+      const file = e.currentTarget.files?.[0];
+      if (!file) return false;
+
+      const result = await dispatch(asyncUserUpdateProfilePicture(file)).unwrap();
+
+      if (!result.success) {
+        throw new Error(result.message);
+      }
+
+      // Update user in context auth
+      setUser(result.data);
+
+      notifications.show({
+        title: 'Success',
+        message: result.message,
+        color: 'green',
+      });
+
+      return true;
+    } catch (error) {
+      const result = errorHandler(error);
+
+      notifications.show({
+        title: 'Error',
+        message: result.message,
+        color: 'red',
+      });
+
+      return false;
+    } finally {
+      /// Reset input file value
+      refFile.current!.value = '';
+    }
+  };
 
   // Effect for close context menu
   useEffect(() => {
-    const closeContextMenu = () => {
-      setIsOpen(false);
-    };
+    const closeContextMenu = () => setIsOpen(false);
 
     window.addEventListener('mousedown', closeContextMenu);
     return () => {
@@ -37,48 +78,60 @@ function DrawerProfileAvatar() {
   }, []);
 
   return (
-    <div className="flex flex-col py-5">
-      <div ref={el} className="relative w-32 h-32 self-center">
-        <Image
-          alt="Image Avatar"
-          src={user?.avatar || PATH_DEFAULT_IMAGE}
-          fill
-          className="rounded-full cursor-pointer"
-          onClick={(e) => {
-            const rect = el.current?.getBoundingClientRect();
-            const rectX = rect?.x || 0;
-            const rectY = rect?.y || 0;
-            const x = e.clientX - rectX;
-            const y = e.clientY - rectY;
-            setPoints({ x, y });
-            setIsOpen(true);
-          }}
-        />
-        <Transition mounted={isOpen} transition="scale" duration={500} timingFunction="ease-in-out">
-          {(transitionStyles) => (
-            <Card
-              padding={0}
-              shadow="lg"
-              radius="md"
-              className="min-w-[200px] z-10"
-              withBorder
-              style={{
-                ...transitionStyles,
-                position: 'absolute',
-                top: points.y,
-                left: points.x,
-              }}
-            >
-              <List spacing={0} size="sm" className="py-3" center>
-                <ContextMenuItem icon={<IconEye size="1rem" />} text="Lihat Foto" color="lime" onClick={() => {}} />
-                <ContextMenuItem icon={<IconUpload size="1rem" />} text="Upload Foto" color="blue" onClick={() => {}} />
-                <ContextMenuItem icon={<IconTrash size="1rem" />} text="Hapus Foto" color="red" onClick={() => {}} />
-              </List>
-            </Card>
-          )}
-        </Transition>
+    <>
+      {/* Hidden Input File */}
+      <input ref={refFile} type="file" className="hidden" onChange={onUploadHandler} />
+      <div className="flex flex-col py-5">
+        <div ref={el} className="relative w-40 h-40w-40 self-center">
+          <Image
+            alt="Image Avatar"
+            src={userImageUrl}
+            fill
+            className="rounded-full cursor-pointer"
+            onClick={(e) => {
+              const rect = el.current?.getBoundingClientRect();
+              const rectX = rect?.x || 0;
+              const rectY = rect?.y || 0;
+              const x = e.clientX - rectX;
+              const y = e.clientY - rectY;
+              setPoints({ x, y });
+              setIsOpen(true);
+            }}
+          />
+
+          <Transition mounted={isOpen} transition="scale" duration={500} timingFunction="ease-in-out">
+            {(transitionStyles) => (
+              <Card
+                padding={0}
+                shadow="lg"
+                radius="md"
+                className="min-w-[200px] z-10"
+                withBorder
+                style={{
+                  ...transitionStyles,
+                  position: 'absolute',
+                  top: points.y,
+                  left: points.x,
+                }}
+              >
+                <List spacing={0} size="sm" className="py-3" center>
+                  <ContextMenuItem icon={<IconEye size="1rem" />} text="Lihat Foto" color="lime" onClick={() => {}} />
+                  <ContextMenuItem
+                    icon={<IconUpload size="1rem" />}
+                    text="Upload Foto"
+                    color="blue"
+                    onClick={() => {
+                      refFile.current?.click();
+                    }}
+                  />
+                  <ContextMenuItem icon={<IconTrash size="1rem" />} text="Hapus Foto" color="red" onClick={() => {}} />
+                </List>
+              </Card>
+            )}
+          </Transition>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

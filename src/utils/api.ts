@@ -13,7 +13,7 @@ import { LoginResponseInterface } from '@/interface/login-response.interface';
 import { MessageCreateDTO } from '@/interface/message/dto/message.create.dto';
 import { MessageCreateResponseInterface } from '@/interface/message/message.create-response.interface';
 import { MessageInterface } from '@/interface/message/message.interface';
-import RegisterResponseInterface from '@/interface/register-response.interface';
+import { RegisterResponseInterface } from '@/interface/register-response.interface';
 import { UserUpdateProfileDTO } from '@/interface/user/dto/user.update-profile.dto';
 import { UserSearchByPhoneInterface } from '@/interface/user/user-search-by-phone.interface';
 import { UserResponseInterface } from '@/interface/user/user.interface';
@@ -94,6 +94,24 @@ class API {
         ...bearerHeader(),
       },
     );
+
+    const result: UserUpdateProfileResponseInterface = data;
+
+    setCookie(KEY_COOKIES_USER, JSON.stringify(result.data), {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
+    return result;
+  }
+
+  static async updateProfilePicture(file: File) {
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    const { data } = await axios.put(`${BASE_URL_API}/user/picture`, formData, {
+      ...bearerHeader(),
+    });
 
     const result: UserUpdateProfileResponseInterface = data;
 
