@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ContactCreateDTO } from '@/interface/dto/contact.create.dto';
+import { ContactCreateDTO } from '@/interface/contact/dto/contact.create.dto';
 import API from '@/utils/api';
 import { errorHandler } from '@/utils/error-handler';
 

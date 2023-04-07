@@ -9,7 +9,8 @@ export interface UserInterface {
   name: string;
   phone: string;
   password: string;
-  avatar: null;
+  avatar?: string;
+  bio?: string;
   status: string;
   created_at: Date;
   updated_at: Date;

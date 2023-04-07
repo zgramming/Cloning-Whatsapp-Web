@@ -1,4 +1,4 @@
-import DrawerHeader from '../DrawerHeader';
+import DrawerHeader from '@/components/DrawerHeader';
 
 function DrawerSetting() {
   return (

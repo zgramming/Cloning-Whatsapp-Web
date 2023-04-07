@@ -1,20 +1,23 @@
 import axios from 'axios';
 import { getCookie, removeCookies, setCookie } from 'cookies-next';
 
+import { LoginDTO } from '@/interface/auth/dto/login.dto';
+import { RegisterDTO } from '@/interface/auth/dto/register.dto';
 import { ContactCreateResponseInterface } from '@/interface/contact/contact.create-response.interface';
 import { ContactMeInterface } from '@/interface/contact/contact.me.interface';
-import { ContactCreateDTO } from '@/interface/dto/contact.create.dto';
-import { LoginDTO } from '@/interface/dto/login.dto';
-import { MessageCreateDTO } from '@/interface/dto/message.create.dto';
-import { RegisterDTO } from '@/interface/dto/register.dto';
+import { ContactCreateDTO } from '@/interface/contact/dto/contact.create.dto';
 import { GroupPrivateCreateResponseInterface } from '@/interface/group/group-private-create-response.interface';
 import { GroupDetailInterface } from '@/interface/group/group.detail.interface';
 import { MyGroupInterface } from '@/interface/group/group.me.interface';
 import { LoginResponseInterface } from '@/interface/login-response.interface';
+import { MessageCreateDTO } from '@/interface/message/dto/message.create.dto';
 import { MessageCreateResponseInterface } from '@/interface/message/message.create-response.interface';
 import { MessageInterface } from '@/interface/message/message.interface';
 import RegisterResponseInterface from '@/interface/register-response.interface';
+import { UserUpdateProfileDTO } from '@/interface/user/dto/user.update-profile.dto';
+import { UserSearchByPhoneInterface } from '@/interface/user/user-search-by-phone.interface';
 import { UserResponseInterface } from '@/interface/user/user.interface';
+import { UserUpdateProfileResponseInterface } from '@/interface/user/user.update-profile-response';
 
 import { BASE_URL_API, KEY_COOKIES_LOGIN, KEY_COOKIES_USER } from './constant';
 
@@ -76,7 +79,29 @@ class API {
     const { data } = await axios.get(`${BASE_URL_API}/user/phone/${phone}`, {
       ...bearerHeader(),
     });
-    const result: UserResponseInterface = data;
+    const result: UserSearchByPhoneInterface = data;
+    return result;
+  }
+
+  static async updateProfile({ name, bio }: UserUpdateProfileDTO) {
+    const { data } = await axios.put(
+      `${BASE_URL_API}/user`,
+      {
+        name,
+        bio,
+      },
+      {
+        ...bearerHeader(),
+      },
+    );
+
+    const result: UserUpdateProfileResponseInterface = data;
+
+    setCookie(KEY_COOKIES_USER, JSON.stringify(result.data), {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
     return result;
   }
 

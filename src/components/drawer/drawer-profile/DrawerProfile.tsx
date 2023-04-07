@@ -1,0 +1,226 @@
+import Image from 'next/image';
+import { useContext, useEffect, useRef, useState } from 'react';
+
+import { Card, Divider, List, Transition } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { IconEye, IconTrash, IconUpload } from '@tabler/icons-react';
+import ContextMenuItem from '@/components/ContextMenuItem';
+import { AuthContext } from '@/context/AuthContext';
+import { useAppDispatch } from '@/hooks/use-dispatch-selector';
+import { asyncUserUpdateProfile } from '@/redux-toolkit/feature/user/user.thunk';
+import { PATH_DEFAULT_IMAGE } from '@/utils/constant';
+import { errorHandler } from '@/utils/error-handler';
+
+import DrawerHeader from '../../DrawerHeader';
+import DrawerProfileInputEdit from './DrawerProfileInputEdit';
+import DrawerProfileInputPreview from './DrawerProfileInputPreview';
+
+function DrawerProfileAvatar() {
+  const el = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [points, setPoints] = useState({
+    x: 0,
+    y: 0,
+  });
+  const { user } = useContext(AuthContext);
+
+  // Effect for close context menu
+  useEffect(() => {
+    const closeContextMenu = () => {
+      setIsOpen(false);
+    };
+
+    window.addEventListener('mousedown', closeContextMenu);
+    return () => {
+      window.removeEventListener('mousedown', closeContextMenu);
+    };
+  }, []);
+
+  return (
+    <div className="flex flex-col py-5">
+      <div ref={el} className="relative w-32 h-32 self-center">
+        <Image
+          alt="Image Avatar"
+          src={user?.avatar || PATH_DEFAULT_IMAGE}
+          fill
+          className="rounded-full cursor-pointer"
+          onClick={(e) => {
+            const rect = el.current?.getBoundingClientRect();
+            const rectX = rect?.x || 0;
+            const rectY = rect?.y || 0;
+            const x = e.clientX - rectX;
+            const y = e.clientY - rectY;
+            setPoints({ x, y });
+            setIsOpen(true);
+          }}
+        />
+        <Transition mounted={isOpen} transition="scale" duration={500} timingFunction="ease-in-out">
+          {(transitionStyles) => (
+            <Card
+              padding={0}
+              shadow="lg"
+              radius="md"
+              className="min-w-[200px] z-10"
+              withBorder
+              style={{
+                ...transitionStyles,
+                position: 'absolute',
+                top: points.y,
+                left: points.x,
+              }}
+            >
+              <List spacing={0} size="sm" className="py-3" center>
+                <ContextMenuItem icon={<IconEye size="1rem" />} text="Lihat Foto" color="lime" onClick={() => {}} />
+                <ContextMenuItem icon={<IconUpload size="1rem" />} text="Upload Foto" color="blue" onClick={() => {}} />
+                <ContextMenuItem icon={<IconTrash size="1rem" />} text="Hapus Foto" color="red" onClick={() => {}} />
+              </List>
+            </Card>
+          )}
+        </Transition>
+      </div>
+    </div>
+  );
+}
+
+function DrawerProfileInpuBio() {
+  const { user, setUser } = useContext(AuthContext);
+
+  const [isModeEdit, setIsModeEdit] = useState(false);
+  const [bio, setBio] = useState(user?.bio || '');
+
+  const dispatch = useAppDispatch();
+
+  const onSave = async () => {
+    try {
+      const result = await dispatch(
+        asyncUserUpdateProfile({
+          name: user?.name || '',
+          bio,
+        }),
+      ).unwrap();
+
+      if (!result.success) {
+        throw new Error(result.message);
+      }
+
+      setIsModeEdit(false);
+
+      // Update user in context auth
+      setUser(result.data);
+
+      notifications.show({
+        title: 'Success',
+        message: result.message,
+        color: 'green',
+      });
+    } catch (error) {
+      const result = errorHandler(error);
+      notifications.show({
+        title: 'Error',
+        message: result.message,
+        color: 'red',
+      });
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-3 p-5">
+      <div className="font-semibold text-primary-teal text-xs">Tentang Kamu</div>
+      {isModeEdit ? (
+        <DrawerProfileInputEdit
+          value={bio}
+          onEscPressed={() => setIsModeEdit(false)}
+          onChange={(e) => setBio(e.currentTarget.value)}
+          onSave={onSave}
+        />
+      ) : (
+        <DrawerProfileInputPreview
+          value={bio}
+          onClick={() => {
+            setIsModeEdit(true);
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+function DrawerProfileInputName() {
+  const { user, setUser } = useContext(AuthContext);
+
+  const [isModeEdit, setIsModeEdit] = useState(false);
+  const [name, setName] = useState(user?.name || '');
+
+  const dispatch = useAppDispatch();
+
+  const onSave = async () => {
+    try {
+      const result = await dispatch(
+        asyncUserUpdateProfile({
+          name,
+        }),
+      ).unwrap();
+
+      if (!result.success) {
+        throw new Error(result.message);
+      }
+
+      setIsModeEdit(false);
+
+      // Update user in context auth
+      setUser(result.data);
+
+      notifications.show({
+        title: 'Success',
+        message: result.message,
+        color: 'green',
+      });
+    } catch (error) {
+      const result = errorHandler(error);
+      notifications.show({
+        title: 'Error',
+        message: result.message,
+        color: 'red',
+      });
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-3 p-5">
+      <div className="font-semibold text-primary-teal text-xs">Nama Kamu</div>
+      {isModeEdit ? (
+        <DrawerProfileInputEdit
+          value={name}
+          onEscPressed={() => setIsModeEdit(false)}
+          onChange={(e) => setName(e.currentTarget.value)}
+          onSave={onSave}
+        />
+      ) : (
+        <DrawerProfileInputPreview
+          value={name}
+          onClick={() => {
+            setIsModeEdit(true);
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+function DrawerProfile() {
+  return (
+    <div className="flex flex-col">
+      <DrawerHeader title="Profile" />
+      <div className="flex flex-col ">
+        <DrawerProfileAvatar />
+        <Divider />
+        <DrawerProfileInputName />
+        <Divider />
+        <DrawerProfileInpuBio />
+        <Divider />
+      </div>
+    </div>
+  );
+}
+
+export default DrawerProfile;

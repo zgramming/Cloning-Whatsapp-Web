@@ -4,14 +4,15 @@ import { Avatar, Loader, LoadingOverlay, TextInput } from '@mantine/core';
 import { useDebouncedState } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconSearch } from '@tabler/icons-react';
+import DrawerHeader from '@/components/DrawerHeader';
 import { DrawerNavigationStackContext } from '@/context/DrawerNavigationStackContext';
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
 import { useAppDispatch, useAppSelector } from '@/hooks/use-dispatch-selector';
 import { asyncCreatePrivateGroup } from '@/redux-toolkit/feature/group/group.thunk';
-import { asyncUserByPhone, resetUserFilteredPhone } from '@/redux-toolkit/feature/user/user-filtered-phone.slice';
+import { resetUserFilteredPhone } from '@/redux-toolkit/feature/user/user-filtered-phone.slice';
+import { asyncUserByPhone } from '@/redux-toolkit/feature/user/user.thunk';
 
-import DrawerHeader from '../DrawerHeader';
-import DrawerChatTile from './DrawerChatTile';
+import DrawerChatTile from '../drawer-chat/DrawerChatTile';
 
 function DrawerSearchPerson() {
   const { setId } = useContext(SelectedChatListContext);

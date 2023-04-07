@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
 
-import { ActionIcon, Avatar, Menu, Tooltip } from '@mantine/core';
+import { ActionIcon, Menu, Tooltip } from '@mantine/core';
 import {
   IconDotsVertical,
   IconHistoryToggle,
@@ -17,17 +17,9 @@ import { SocketIOContext } from '@/context/SocketIOContext';
 import API from '@/utils/api';
 import { routes } from '@/utils/routes';
 
-import DrawerChat from '../drawer/DrawerChat';
-import DrawerSetting from '../drawer/DrawerSetting';
-
-function ChatListHeaderAvatar() {
-  const { user } = useContext(AuthContext);
-  return (
-    <Tooltip label="Coming Soon">
-      <Avatar radius="xl" size="md" src={user?.avatar} className="hover:cursor-pointer" />
-    </Tooltip>
-  );
-}
+import DrawerChat from '../drawer/drawer-chat/DrawerChat';
+import DrawerSetting from '../drawer/drawer-setting/DrawerSetting';
+import ChatListHeaderAvatar from './ChatListHeaderAvatar';
 
 function ChatListHeader() {
   const { replace } = useRouter();

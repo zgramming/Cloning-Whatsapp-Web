@@ -1,11 +1,13 @@
-import { TextInput, Avatar } from '@mantine/core';
-import { IconSearch, IconUser, IconUsers } from '@tabler/icons-react';
 import { useContext } from 'react';
+
+import { Avatar, TextInput } from '@mantine/core';
+import { IconSearch, IconUser, IconUsers } from '@tabler/icons-react';
 import { DrawerNavigationStackContext } from '@/context/DrawerNavigationStackContext';
-import DrawerHeader from '../DrawerHeader';
+
+import DrawerHeader from '../../DrawerHeader';
+import DrawerSearchPerson from '../drawer-search-person/DrawerSearchPerson';
 import DrawerChatTile from './DrawerChatTile';
 import DrawerChatYourContact from './DrawerChatYourContact';
-import DrawerSearchPerson from './DrawerSearchPerson';
 
 function DrawerChat() {
   const { push } = useContext(DrawerNavigationStackContext);

@@ -1,7 +1,5 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { UserSearchByPhoneInterface } from '@/interface/user/user-search-by-phone.interface';
-import API from '@/utils/api';
-import { errorHandler } from '@/utils/error-handler';
 
 type SliceType = {
   response?: UserSearchByPhoneInterface;
@@ -15,20 +13,6 @@ const initialState: SliceType = {
   error: undefined,
 };
 
-export const asyncUserByPhone = createAsyncThunk(
-  'user/asyncUserByPhone',
-  async (phone: string, { rejectWithValue }) => {
-    try {
-      const result = await API.getUserByPhone(phone);
-
-      return result;
-    } catch (error) {
-      const err = errorHandler(error);
-      return rejectWithValue(err.message);
-    }
-  },
-);
-
 const userFilteredPhoneSlice = createSlice({
   initialState,
   name: 'userFilteredPhone',
@@ -38,24 +22,24 @@ const userFilteredPhoneSlice = createSlice({
       state.loading = true;
       state.error = undefined;
     },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(asyncUserByPhone.pending, (state) => {
-      state.loading = true;
-      state.error = undefined;
-    });
-    builder.addCase(asyncUserByPhone.fulfilled, (state, action) => {
-      state.loading = false;
-      const item: UserSearchByPhoneInterface = action.payload;
+    initializeUserFilteredPhone: (state, action) => {
+      const item = action.payload as UserSearchByPhoneInterface;
       state.response = item;
-    });
-    builder.addCase(asyncUserByPhone.rejected, (state, action) => {
-      state.loading = false;
+    },
+    setLoadingUserFilteredPhone: (state, action) => {
+      state.loading = action.payload;
+    },
+    setErrorUserFilteredPhone: (state, action) => {
       state.error = action.payload as string;
-    });
+    },
   },
 });
 
-export const { resetUserFilteredPhone } = userFilteredPhoneSlice.actions;
+export const {
+  resetUserFilteredPhone,
+  initializeUserFilteredPhone,
+  setErrorUserFilteredPhone,
+  setLoadingUserFilteredPhone,
+} = userFilteredPhoneSlice.actions;
 
 export default userFilteredPhoneSlice.reducer;

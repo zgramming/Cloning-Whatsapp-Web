@@ -26,9 +26,9 @@ function ChatListItems() {
       setShowContextMenu(false);
     };
 
-    window.addEventListener('click', closeContextMenu);
+    window.addEventListener('mousedown', closeContextMenu);
     return () => {
-      window.removeEventListener('click', closeContextMenu);
+      window.removeEventListener('mousedown', closeContextMenu);
     };
   }, []);
 
