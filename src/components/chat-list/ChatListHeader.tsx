@@ -49,11 +49,6 @@ function ChatListHeader() {
         <div className="grow flex flex-wrap justify-end gap-5">
           <Tooltip label="Coming Soon">
             <ActionIcon>
-              <IconUsersGroup />
-            </ActionIcon>
-          </Tooltip>
-          <Tooltip label="Coming Soon">
-            <ActionIcon>
               <IconHistoryToggle />
             </ActionIcon>
           </Tooltip>
