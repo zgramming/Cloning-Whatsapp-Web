@@ -6,7 +6,9 @@ import { RegisterDTO } from '@/interface/auth/dto/register.dto';
 import { ContactCreateResponseInterface } from '@/interface/contact/contact.create-response.interface';
 import { ContactMeInterface } from '@/interface/contact/contact.me.interface';
 import { ContactCreateDTO } from '@/interface/contact/dto/contact.create.dto';
-import { GroupPrivateCreateResponseInterface } from '@/interface/group/group-private-create-response.interface';
+import { GroupCreateGroupGroupDTO } from '@/interface/group/dto/group.create-group-group.dto';
+import { GroupCreateGroupGroupResponseInterface } from '@/interface/group/group.create-group-group-response.interface';
+import { GroupPrivateCreateResponseInterface } from '@/interface/group/group.create-group-private-response.interface';
 import { GroupDetailInterface } from '@/interface/group/group.detail.interface';
 import { MyGroupInterface } from '@/interface/group/group.me.interface';
 import { LoginResponseInterface } from '@/interface/login-response.interface';
@@ -150,6 +152,20 @@ class API {
       },
     );
     const result: GroupPrivateCreateResponseInterface = data;
+    return result;
+  }
+
+  static async createGroupGroup({ name, participants, avatar }: GroupCreateGroupGroupDTO) {
+    const formData = new FormData();
+
+    formData.append('name', name);
+    formData.append('participants', JSON.stringify(participants));
+    if (avatar) formData.append('avatar', avatar);
+
+    const { data } = await axios.post(`${BASE_URL_API}/group/group`, formData, {
+      ...bearerHeader(),
+    });
+    const result: GroupCreateGroupGroupResponseInterface = data;
     return result;
   }
 

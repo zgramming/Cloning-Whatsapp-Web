@@ -7,7 +7,6 @@ import { AuthContext } from '@/context/AuthContext';
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
 import { SocketIOContext } from '@/context/SocketIOContext';
 import { useAppDispatch, useAppSelector } from '@/hooks/use-dispatch-selector';
-import { asyncMyGroup } from '@/redux-toolkit/feature/group/group.thunk';
 import { asyncSendMessage } from '@/redux-toolkit/feature/message/message.thunk';
 import { errorHandler } from '@/utils/error-handler';
 
@@ -59,18 +58,22 @@ function ChatMessageInput() {
     try {
       if (!message) return;
 
+      const isNewChat = messages.length === 0;
       const result = await dispatch(
-        asyncSendMessage({ from: user?.id || '', group_id: groupId || '', message, type: 'TEXT' }),
+        asyncSendMessage({
+          from: user?.id || '',
+          group_id: groupId || '',
+          message,
+          type: 'TEXT',
+          is_new_chat: isNewChat,
+        }),
       ).unwrap();
 
       /// reset message
       setMessage('');
 
-      const isNewChat = messages.length === 0;
-
       /// Update group list with new user when is first time chat
       if (isNewChat) {
-        await dispatch(asyncMyGroup()).unwrap();
         emitInviteNewGroup({
           group_id: groupId || '',
           invited_by: user?.id || '',
@@ -117,7 +120,13 @@ function ChatMessageInput() {
         </ActionIcon>
       </div>
       <div className="grow">
-        <TextInput placeholder="Tuliskan sebuah pesan" value={message} onChange={onChangeText} onKeyDown={onEnter} />
+        <TextInput
+          placeholder="Tuliskan sebuah pesan"
+          value={message}
+          onChange={onChangeText}
+          onKeyDown={onEnter}
+          autoFocus
+        />
       </div>
       <div className="flex flex-wrap gap-3">
         <ActionIcon>

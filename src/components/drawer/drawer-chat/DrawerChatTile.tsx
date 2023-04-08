@@ -4,14 +4,18 @@ type DrawerChatTileProps = {
   avatar: ReactNode;
   name: string;
   description?: string;
+  className?: string;
   onClick?: () => void;
 };
 
-function DrawerChatTile({ avatar, name, description, onClick }: DrawerChatTileProps) {
+function DrawerChatTile({ avatar, name, description, className, onClick }: DrawerChatTileProps) {
   return (
     <div
       role="presentation"
-      className="flex flex-row items-center gap-3 p-3 hover:bg-gray-100 hover:cursor-pointer"
+      className={`
+      flex flex-row items-center gap-3 p-3 hover:bg-gray-100 hover:cursor-pointer
+      ${className}
+      `}
       onClick={onClick}
     >
       {avatar}
@@ -26,6 +30,7 @@ function DrawerChatTile({ avatar, name, description, onClick }: DrawerChatTilePr
 DrawerChatTile.defaultProps = {
   description: undefined,
   onClick: undefined,
+  className: '',
 };
 
 export default DrawerChatTile;

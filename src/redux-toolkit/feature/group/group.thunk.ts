@@ -1,13 +1,15 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { GroupCreateGroupGroupDTO } from '@/interface/group/dto/group.create-group-group.dto';
 import API from '@/utils/api';
 import { errorHandler } from '@/utils/error-handler';
+
 import {
-  setLoadingDetailGroup,
   initializeDetailGroup,
-  setErrorDetailGroup,
-  setLoadingMyGroup,
   initializeMyGroup,
+  setErrorDetailGroup,
   setErrorMyGroup,
+  setLoadingDetailGroup,
+  setLoadingMyGroup,
 } from './group.slice';
 
 export const asyncGroupDetail = createAsyncThunk(
@@ -49,6 +51,24 @@ export const asyncCreatePrivateGroup = createAsyncThunk(
   async (userId: string, { rejectWithValue }) => {
     try {
       const result = await API.createPrivateGroup(userId);
+      return result;
+    } catch (error) {
+      const err = errorHandler(error);
+      return rejectWithValue(err.message);
+    }
+  },
+);
+
+export const asyncCreateGroupGroup = createAsyncThunk(
+  'group/createGroupGroup',
+  async (data: GroupCreateGroupGroupDTO, { rejectWithValue }) => {
+    try {
+      const { name, participants, avatar } = data;
+      const result = await API.createGroupGroup({
+        name,
+        participants,
+        avatar,
+      });
       return result;
     } catch (error) {
       const err = errorHandler(error);

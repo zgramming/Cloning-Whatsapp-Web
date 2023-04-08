@@ -11,4 +11,5 @@ export interface MessageCreateDTO {
   message: string;
   from: string;
   type: keyof TypeMessage;
+  is_new_chat: boolean;
 }

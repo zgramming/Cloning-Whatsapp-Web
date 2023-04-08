@@ -290,7 +290,7 @@ function DrawerProfile() {
   return (
     <div className="flex flex-col min-h-full">
       <DrawerHeader title="Profile" />
-      <div className="grow flex flex-col overflow-auto h-0">
+      <div className="grow flex flex-col overflow-auto h-[0]">
         <DrawerProfileAvatar />
         <Divider />
         <DrawerProfileInputName />

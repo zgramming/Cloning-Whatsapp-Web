@@ -3,14 +3,21 @@ import { useContext } from 'react';
 import { Avatar, TextInput } from '@mantine/core';
 import { IconSearch, IconUser, IconUsers } from '@tabler/icons-react';
 import { DrawerNavigationStackContext } from '@/context/DrawerNavigationStackContext';
+import { SelectedChatListContext } from '@/context/SelectedChatListContext';
+import useContactSelector from '@/hooks/use-contact-selector';
 
 import DrawerHeader from '../../DrawerHeader';
+import DrawerChooseParticipantGroup from '../drawer-choose-participant-group/DrawerChooseParticipantGroup';
 import DrawerSearchPerson from '../drawer-search-person/DrawerSearchPerson';
 import DrawerChatTile from './DrawerChatTile';
 import DrawerChatYourContact from './DrawerChatYourContact';
 
 function DrawerChat() {
-  const { push } = useContext(DrawerNavigationStackContext);
+  const { groupedContactByFirstChar } = useContactSelector();
+
+  const { push, popAll: closeAllDrawerStack } = useContext(DrawerNavigationStackContext);
+  const { setId: emitGroupId } = useContext(SelectedChatListContext);
+
   return (
     <div className="flex flex-col min-h-full">
       <DrawerHeader title="Pesan Baru" />
@@ -36,39 +43,20 @@ function DrawerChat() {
               <IconUsers size="1.5rem" />
             </Avatar>
           }
+          onClick={() => push(<DrawerChooseParticipantGroup />)}
         />
-        <DrawerChatYourContact />
+        <div className="flex flex-col">
+          <h3 className="p-3 font-semibold">Kontak Kamu</h3>
+          <DrawerChatYourContact
+            items={groupedContactByFirstChar}
+            onClick={({ group_id: groupId }) => {
+              emitGroupId(groupId);
+              closeAllDrawerStack();
+            }}
+          />
+        </div>
       </div>
     </div>
-    // <div className="flex flex-col">
-    //   <DrawerHeader title="Pesan Baru" />
-    // <div className="p-3">
-    //   <TextInput placeholder="Cari Kontak" variant="filled" icon={<IconSearch size="1rem" />} />
-    // </div>
-    //   <div className="flex flex-col">
-    //     <DrawerChatTile
-    //       name="Pesan Pribadi"
-    //       avatar={
-    //         <Avatar radius="xl" size="lg" color="green">
-    //           <IconUser size="1.5rem" />
-    //         </Avatar>
-    //       }
-    //       onClick={() => push(<DrawerSearchPerson key="DrawerSearchPerson" />)}
-    //     />
-    //     <DrawerChatTile
-    //       name="Group"
-    //       avatar={
-    //         <Avatar radius="xl" size="lg" color="green">
-    //           <IconUsers size="1.5rem" />
-    //         </Avatar>
-    //       }
-    //     />
-    //     <DrawerChatYourContact />
-    //     <DrawerChatYourContact />
-    //     <DrawerChatYourContact />
-    //     <DrawerChatYourContact />
-    //   </div>
-    // </div>
   );
 }
 

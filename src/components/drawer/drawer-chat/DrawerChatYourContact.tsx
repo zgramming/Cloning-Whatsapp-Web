@@ -1,68 +1,50 @@
-import { useContext, useEffect, useMemo } from 'react';
-
 import { Avatar } from '@mantine/core';
-import { DrawerNavigationStackContext } from '@/context/DrawerNavigationStackContext';
-import { SelectedChatListContext } from '@/context/SelectedChatListContext';
-import { useAppDispatch, useAppSelector } from '@/hooks/use-dispatch-selector';
-import { asyncGetMyContact } from '@/redux-toolkit/feature/contact/contact.thunk';
+import { ContactMe } from '@/interface/contact/contact.me.interface';
 import { PATH_DEFAULT_ASSET_IMAGE } from '@/utils/constant';
 
 import DrawerChatTile from './DrawerChatTile';
 
-function DrawerChatYourContact() {
-  const { popAll: closeAllDrawerStack } = useContext(DrawerNavigationStackContext);
-  const { setId: emitGroupId } = useContext(SelectedChatListContext);
+type DrawerChatYourContactProps = {
+  items: [string, ContactMe[]][];
+  onClick: (contact: ContactMe) => void;
+  builderClass?: (contact: ContactMe) => string;
+};
 
-  const groups = useAppSelector((state) => state.contact.items);
-  const dispatch = useAppDispatch();
-
-  const groupedContactByFirstChar = useMemo(() => {
-    const grouped = groups.reduce((acc, curr) => {
-      // Get First Character of name
-      const firstLetter = curr.user.name[0].toUpperCase();
-
-      // Group by first letter
-      if (acc[firstLetter]) {
-        acc[firstLetter].push(curr);
-      } else {
-        acc[firstLetter] = [curr];
-      }
-
-      return acc;
-    }, {} as { [key: string]: typeof groups });
-    return Object.entries(grouped).sort((a, b) => a[0].localeCompare(b[0]));
-  }, [groups]);
-
-  useEffect(() => {
-    dispatch(asyncGetMyContact());
-    return () => {};
-  }, [dispatch]);
+function DrawerChatYourContact({ items, builderClass, onClick }: DrawerChatYourContactProps) {
+  if (items.length === 0) {
+    return (
+      <div className="flex-grow flex items-center justify-center">
+        <p className="text-center text-primary-teal">Tidak ada kontak</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col">
-      <h3 className="p-3 font-semibold">Kontak Kamu</h3>
-      {groupedContactByFirstChar.map(([firstLetter, contacts]) => (
+    <>
+      {items.map(([firstLetter, contacts]) => (
         <div key={firstLetter} className="flex flex-col">
-          <h3 className="px-5 text-primary-teal font-normal">{firstLetter}</h3>
+          {contacts.length > 0 && <h3 className="px-5 text-primary-teal font-normal">{firstLetter}</h3>}
           {contacts.map((contact) => {
-            const { id, user, group_id: groupId } = contact;
-
+            const { id, user } = contact;
+            const className = builderClass?.(contact);
             return (
               <DrawerChatTile
                 key={id}
                 avatar={<Avatar radius="xl" size="md" color="green" src={user.avatar || PATH_DEFAULT_ASSET_IMAGE} />}
                 name={user.name}
-                onClick={() => {
-                  closeAllDrawerStack();
-                  emitGroupId(groupId);
-                }}
+                className={className}
+                onClick={() => onClick(contact)}
               />
             );
           })}
         </div>
       ))}
-    </div>
+    </>
   );
 }
+
+DrawerChatYourContact.defaultProps = {
+  builderClass: () => '',
+};
 
 export default DrawerChatYourContact;

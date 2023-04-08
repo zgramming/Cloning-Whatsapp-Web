@@ -48,23 +48,23 @@ function DrawerSearchPerson() {
   }, [dispatch, enteredPhone]);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-full ">
       <DrawerHeader title="Cari orang" />
-      <div className="flex flex-col gap-5">
-        <LoadingOverlay visible={onLoadingCreatePrivateGroup} overlayBlur={2} />
+      <LoadingOverlay visible={onLoadingCreatePrivateGroup} overlayBlur={2} />
 
-        <div className="p-3">
-          <TextInput
-            defaultValue={enteredPhone}
-            placeholder="Cari orang berdasarkan nomor telepon"
-            variant="filled"
-            icon={loadingEnteredPhone ? <Loader size="sm" /> : <IconSearch size="1rem" />}
-            onChange={(e) => {
-              setLoadingEnteredPhone(true);
-              setEnteredPhone(e.currentTarget.value);
-            }}
-          />
-        </div>
+      <div className="p-3">
+        <TextInput
+          defaultValue={enteredPhone}
+          placeholder="Cari orang berdasarkan nomor telepon"
+          variant="filled"
+          icon={loadingEnteredPhone ? <Loader size="sm" /> : <IconSearch size="1rem" />}
+          onChange={(e) => {
+            setLoadingEnteredPhone(true);
+            setEnteredPhone(e.currentTarget.value);
+          }}
+        />
+      </div>
+      <div className="grow flex flex-col gap-5 h-[0] overflow-auto">
         {!loading && !error && responseOnFilteredUser && (
           <DrawerChatTile
             avatar={<Avatar radius="xl" size="lg" color="green" />}
