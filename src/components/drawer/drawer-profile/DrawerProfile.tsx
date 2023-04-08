@@ -3,7 +3,7 @@ import { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 
 import { Card, Divider, List, Transition } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { IconEye, IconTrash, IconUpload } from '@tabler/icons-react';
+import { IconCamera, IconEye, IconTrash, IconUpload } from '@tabler/icons-react';
 import ContextMenuItem from '@/components/ContextMenuItem';
 import { AuthContext } from '@/context/AuthContext';
 import { useAppDispatch } from '@/hooks/use-dispatch-selector';
@@ -23,6 +23,7 @@ function DrawerProfileAvatar() {
   const refFile = useRef<HTMLInputElement>(null);
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isHover, setIsHover] = useState(false);
   const [points, setPoints] = useState({
     x: 0,
     y: 0,
@@ -70,10 +71,18 @@ function DrawerProfileAvatar() {
   // Effect for close context menu
   useEffect(() => {
     const closeContextMenu = () => setIsOpen(false);
+    const onEscHandler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeContextMenu();
+      }
+    };
 
     window.addEventListener('mousedown', closeContextMenu);
+    window.addEventListener('keydown', onEscHandler);
+
     return () => {
       window.removeEventListener('mousedown', closeContextMenu);
+      window.removeEventListener('keydown', onEscHandler);
     };
   }, []);
 
@@ -82,22 +91,39 @@ function DrawerProfileAvatar() {
       {/* Hidden Input File */}
       <input ref={refFile} type="file" className="hidden" onChange={onUploadHandler} />
       <div className="flex flex-col py-5">
-        <div ref={el} className="relative w-40 h-40 self-center">
-          <Image
-            alt="Image Avatar"
-            src={userImageUrl}
-            fill
-            className="rounded-full cursor-pointer"
-            onClick={(e) => {
-              const rect = el.current?.getBoundingClientRect();
-              const rectX = rect?.x || 0;
-              const rectY = rect?.y || 0;
-              const x = e.clientX - rectX;
-              const y = e.clientY - rectY;
-              setPoints({ x, y });
-              setIsOpen(true);
-            }}
-          />
+        <div
+          ref={el}
+          className="relative w-40 h-40 self-center cursor-pointer"
+          onMouseEnter={() => setIsHover(true)}
+          onMouseLeave={() => setIsHover(false)}
+        >
+          <Image alt="Image Avatar" src={userImageUrl} className="rounded-full" fill />
+
+          <Transition mounted={isHover} transition="fade" duration={500} timingFunction="ease-in-out">
+            {(transitionStyles) => (
+              <div
+                role="presentation"
+                className="absolute w-40 h-40 rounded-full bg-black/50"
+                style={{
+                  ...transitionStyles,
+                }}
+                onClick={(e) => {
+                  const rect = el.current?.getBoundingClientRect();
+                  const rectX = rect?.x || 0;
+                  const rectY = rect?.y || 0;
+                  const x = e.clientX - rectX;
+                  const y = e.clientY - rectY;
+                  setPoints({ x, y });
+                  setIsOpen(true);
+                }}
+              >
+                <div className="flex flex-col justify-center items-center h-full text-white text-sm">
+                  <IconCamera size="2rem" />
+                  <div>Update foto profile</div>
+                </div>
+              </div>
+            )}
+          </Transition>
 
           <Transition mounted={isOpen} transition="scale" duration={500} timingFunction="ease-in-out">
             {(transitionStyles) => (
