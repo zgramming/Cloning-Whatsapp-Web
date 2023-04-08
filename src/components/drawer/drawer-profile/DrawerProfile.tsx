@@ -82,7 +82,7 @@ function DrawerProfileAvatar() {
       {/* Hidden Input File */}
       <input ref={refFile} type="file" className="hidden" onChange={onUploadHandler} />
       <div className="flex flex-col py-5">
-        <div ref={el} className="relative w-40 h-40w-40 self-center">
+        <div ref={el} className="relative w-40 h-40 self-center">
           <Image
             alt="Image Avatar"
             src={userImageUrl}
