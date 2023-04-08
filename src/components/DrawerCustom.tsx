@@ -6,6 +6,7 @@ import { DrawerNavigationStackContext } from '@/context/DrawerNavigationStackCon
 function DrawerCustom() {
   const { latestNode } = useContext(DrawerNavigationStackContext);
   const isOpen = latestNode !== undefined;
+
   return (
     <Transition mounted={isOpen} transition="scale-x" duration={500}>
       {(styles) => (

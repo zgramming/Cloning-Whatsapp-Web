@@ -15,6 +15,7 @@ function ChatMessage() {
   const { data: detailGroup, loading, error } = useAppSelector((state) => state.group.detail);
   const dispatch = useAppDispatch();
 
+  /// Every time groupId change, fetch group detail
   useEffect(() => {
     if (groupId) {
       dispatch(asyncGroupDetail(groupId));

@@ -3,6 +3,7 @@ import { ContactCreateDTO } from '@/interface/contact/dto/contact.create.dto';
 import API from '@/utils/api';
 import { errorHandler } from '@/utils/error-handler';
 
+import { asyncMyGroup } from '../group/group.thunk';
 import { initializeMyContact, setLoadingMyContact } from './contact.slice';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -28,7 +29,7 @@ export const asyncGetMyContact = createAsyncThunk('contact/getMyContact', async 
 
 export const asyncCreateContact = createAsyncThunk(
   'contact/createContact',
-  async (payload: ContactCreateDTO, { rejectWithValue }) => {
+  async (payload: ContactCreateDTO, { dispatch, rejectWithValue }) => {
     try {
       const { groupId, userId } = payload;
       const response = await API.addContact({ groupId, userId });
@@ -37,7 +38,10 @@ export const asyncCreateContact = createAsyncThunk(
         throw new Error(response.message);
       }
 
-      return response.data;
+      // Re-fetch my group list after create new group
+      dispatch(asyncMyGroup());
+
+      return response;
     } catch (error) {
       const result = errorHandler(error);
       return rejectWithValue(result.message);

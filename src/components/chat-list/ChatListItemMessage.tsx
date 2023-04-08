@@ -4,6 +4,7 @@ import { IconCheck } from '@tabler/icons-react';
 import { AuthContext } from '@/context/AuthContext';
 import { useAppSelector } from '@/hooks/use-dispatch-selector';
 import { MyGroup } from '@/interface/group/group.me.interface';
+import { inserCharEveryNCharacter } from '@/utils/function';
 
 function ChatListItemMessageIndicator({ group }: { group: MyGroup }) {
   const { user: userLogin } = useContext(AuthContext);
@@ -38,12 +39,25 @@ function ChatListItemMessageDescription({ last_msg, id }: MyGroup) {
 }
 
 function ChatListItemMessage({ group }: { group: MyGroup }) {
-  const isGroup = group.type === 'GROUP';
-  const name = isGroup ? group.name : group.interlocutors?.name;
+  function nameUser() {
+    let result = group.name;
+
+    /// Condition when private chat
+    if (group.interlocutors) {
+      result = group.interlocutors.name;
+
+      if (group.interlocutors.already_on_contact === false) {
+        result = group.interlocutors.phone;
+        result = inserCharEveryNCharacter(result, '-', 4);
+      }
+    }
+
+    return result;
+  }
 
   return (
     <div className="grow flex flex-col gap-2 px-2">
-      <div className="text-base">{name}</div>
+      <div className="text-base">{nameUser()}</div>
       <div className="flex flex-row items-center gap-1 text-xs text-gray-500">
         <ChatListItemMessageIndicator group={group} />
         <ChatListItemMessageDescription {...group} />

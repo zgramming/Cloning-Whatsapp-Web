@@ -17,7 +17,6 @@ export interface MyGroup {
   group_member: GroupMember[];
   _count: Count;
   interlocutors?: Interlocutors;
-  already_on_contact: boolean;
 }
 
 interface Count {
@@ -34,4 +33,5 @@ interface Interlocutors {
   name: string;
   phone: string;
   avatar?: string;
+  already_on_contact: boolean;
 }

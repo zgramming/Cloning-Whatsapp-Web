@@ -9,7 +9,7 @@ import ChatListItemAvatar from './ChatListItemAvatar';
 import ChatListItemMessage from './ChatListItemMessage';
 
 type OnRightClickType = {
-  groupId: string;
+  group: MyGroup;
   points: {
     x: number;
     y: number;
@@ -43,7 +43,10 @@ function ChatListItem({ group, onRightClick }: ChatListItemType) {
       }}
       onContextMenu={(e) => {
         e.preventDefault();
-        onRightClick({ groupId: group.id, points: { x: e.clientX, y: e.clientY } });
+        onRightClick({
+          group,
+          points: { x: e.clientX, y: e.clientY },
+        });
       }}
     >
       <ChatListItemAvatar avatar={srcAvatar} />
