@@ -8,7 +8,7 @@ function ChatList() {
   return (
     <div
       className={`
-      basis-[40%] flex flex-col shadow
+      relative basis-[40%] flex flex-col shadow
       xl:basis-[30%]
     `}
     >
