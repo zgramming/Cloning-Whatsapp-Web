@@ -1,14 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { KEY_COOKIES_LOGIN } from '@/utils/constant';
 
-const excludePathCheckingToken = (path: string) =>
-  path.startsWith('/login') || path.startsWith('/_next') || path.startsWith('/favicon') || path.startsWith('/register');
+const excludePathCheckingToken = (path: string) => {
+  const startWithLogin = path.startsWith('/login');
+  const startWithNext = path.startsWith('/_next');
+  const startWithFavicon = path.startsWith('/favicon');
+  const startWithRegister = path.startsWith('/register');
+  const startWithUnsupport = path.startsWith('/unsupport');
+
+  return startWithLogin || startWithNext || startWithFavicon || startWithRegister || startWithUnsupport;
+};
 
 function middleware(request: NextRequest) {
   const url = request.nextUrl.pathname;
   const accessToken = request.cookies.get(KEY_COOKIES_LOGIN);
 
-  if (accessToken !== undefined && (url.startsWith('/login') || url.startsWith('/register'))) {
+  const startWithLogin = url.startsWith('/login');
+  const startWithRegister = url.startsWith('/register');
+  const startWithUnsupport = url.startsWith('/unsupport');
+
+  if (accessToken !== undefined && (startWithLogin || startWithRegister || startWithUnsupport)) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
