@@ -6,7 +6,12 @@ import ChatListSearch from './ChatListSearch';
 
 function ChatList() {
   return (
-    <div className="relative basis-[30%] flex flex-col shadow">
+    <div
+      className={`
+      basis-[40%] flex flex-col shadow
+      xl:basis-[30%]
+    `}
+    >
       <DrawerCustom />
       <ChatListHeader />
       <ChatListSearch />

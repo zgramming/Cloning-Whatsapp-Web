@@ -3,17 +3,24 @@ import { getCookie, removeCookies, setCookie } from 'cookies-next';
 
 import { LoginDTO } from '@/interface/auth/dto/login.dto';
 import { RegisterDTO } from '@/interface/auth/dto/register.dto';
-import { ContactCreateResponseInterface } from '@/interface/contact/contact.create-response.interface';
+import {
+  ContactCreateResponseInterface,
+} from '@/interface/contact/contact.create-response.interface';
 import { ContactMeInterface } from '@/interface/contact/contact.me.interface';
 import { ContactCreateDTO } from '@/interface/contact/dto/contact.create.dto';
-import { GroupCreateGroupGroupDTO } from '@/interface/group/dto/group.create-group-group.dto';
-import { GroupCreateGroupGroupResponseInterface } from '@/interface/group/group.create-group-group-response.interface';
-import { GroupPrivateCreateResponseInterface } from '@/interface/group/group.create-group-private-response.interface';
+import {
+  GroupCreateGroupGroupResponseInterface,
+} from '@/interface/group/group.create-group-group-response.interface';
+import {
+  GroupPrivateCreateResponseInterface,
+} from '@/interface/group/group.create-group-private-response.interface';
 import { GroupDetailInterface } from '@/interface/group/group.detail.interface';
 import { MyGroupInterface } from '@/interface/group/group.me.interface';
 import { LoginResponseInterface } from '@/interface/login-response.interface';
 import { MessageCreateDTO } from '@/interface/message/dto/message.create.dto';
-import { MessageCreateResponseInterface } from '@/interface/message/message.create-response.interface';
+import {
+  MessageCreateResponseInterface,
+} from '@/interface/message/message.create-response.interface';
 import { MessageInterface } from '@/interface/message/message.interface';
 import { RegisterResponseInterface } from '@/interface/register-response.interface';
 import { UserUpdateProfileDTO } from '@/interface/user/dto/user.update-profile.dto';
@@ -155,13 +162,7 @@ class API {
     return result;
   }
 
-  static async createGroupGroup({ name, participants, avatar }: GroupCreateGroupGroupDTO) {
-    const formData = new FormData();
-
-    formData.append('name', name);
-    formData.append('participants', JSON.stringify(participants));
-    if (avatar) formData.append('avatar', avatar);
-
+  static async createGroupGroup(formData: FormData) {
     const { data } = await axios.post(`${BASE_URL_API}/group/group`, formData, {
       ...bearerHeader(),
     });

@@ -1,11 +1,16 @@
 import { ActionIcon, Avatar, Tooltip } from '@mantine/core';
 import { IconDotsVertical, IconSearch } from '@tabler/icons-react';
 import { GroupDetail, GroupDetailInterlocutors } from '@/interface/group/group.detail.interface';
+import {
+  BASE_URL_GROUP_PROFILE_IMAGE_API, BASE_URL_USER_PROFILE_IMAGE_API, PATH_DEFAULT_ASSET_IMAGE,
+} from '@/utils/constant';
 
-function ChatMessageHeaderGroup({ name }: GroupDetail) {
+function ChatMessageHeaderGroup({ name, avatar }: GroupDetail) {
+  const src = avatar ? `${BASE_URL_GROUP_PROFILE_IMAGE_API}/${avatar}` : PATH_DEFAULT_ASSET_IMAGE;
+
   return (
     <>
-      <Avatar radius="xl" />
+      <Avatar radius="xl" src={src} />
       <div className="flex flex-col gap-1">
         <div className="text-sm">{name}</div>
       </div>
@@ -14,9 +19,13 @@ function ChatMessageHeaderGroup({ name }: GroupDetail) {
 }
 
 function ChatMessageHeaderPrivate({ interlocutors }: { interlocutors: GroupDetailInterlocutors }) {
+  const src = interlocutors.user.avatar
+    ? `${BASE_URL_USER_PROFILE_IMAGE_API}/${interlocutors.user.avatar}`
+    : PATH_DEFAULT_ASSET_IMAGE;
+
   return (
     <>
-      <Avatar radius="xl" src={interlocutors.user.avatar} />
+      <Avatar radius="xl" src={src} />
       <div className="flex flex-col gap-1">
         <div className="text-sm">{interlocutors.user.name}</div>
       </div>

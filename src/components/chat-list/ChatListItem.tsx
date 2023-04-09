@@ -2,7 +2,9 @@ import { useContext } from 'react';
 
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
 import { MyGroup } from '@/interface/group/group.me.interface';
-import { PATH_DEFAULT_ASSET_IMAGE } from '@/utils/constant';
+import {
+  BASE_URL_GROUP_PROFILE_IMAGE_API, BASE_URL_USER_PROFILE_IMAGE_API, PATH_DEFAULT_ASSET_IMAGE,
+} from '@/utils/constant';
 
 import ChatListItemAction from './ChatListItemAction';
 import ChatListItemAvatar from './ChatListItemAvatar';
@@ -25,9 +27,16 @@ function ChatListItem({ group, onRightClick }: ChatListItemType) {
   const { id, setId } = useContext(SelectedChatListContext);
 
   const isGroup = group.type === 'GROUP';
-  const srcAvatar = isGroup
-    ? group.avatar || PATH_DEFAULT_ASSET_IMAGE
-    : group.interlocutors?.avatar || PATH_DEFAULT_ASSET_IMAGE;
+
+  const srcAvatar = () => {
+    if (isGroup) {
+      return group.avatar ? `${BASE_URL_GROUP_PROFILE_IMAGE_API}/${group.avatar}` : PATH_DEFAULT_ASSET_IMAGE;
+    }
+
+    return group.interlocutors?.avatar
+      ? `${BASE_URL_USER_PROFILE_IMAGE_API}/${group.interlocutors?.avatar}`
+      : PATH_DEFAULT_ASSET_IMAGE;
+  };
 
   return (
     <div
@@ -49,7 +58,7 @@ function ChatListItem({ group, onRightClick }: ChatListItemType) {
         });
       }}
     >
-      <ChatListItemAvatar avatar={srcAvatar} />
+      <ChatListItemAvatar avatar={srcAvatar()} />
       <ChatListItemMessage group={group} />
       <ChatListItemAction />
     </div>

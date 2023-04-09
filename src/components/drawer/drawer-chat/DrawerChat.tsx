@@ -45,7 +45,7 @@ function DrawerChat() {
           }
           onClick={() => push(<DrawerChooseParticipantGroup />)}
         />
-        <div className="flex flex-col">
+        <div className="grow flex flex-col">
           <h3 className="p-3 font-semibold">Kontak Kamu</h3>
           <DrawerChatYourContact
             items={groupedContactByFirstChar}

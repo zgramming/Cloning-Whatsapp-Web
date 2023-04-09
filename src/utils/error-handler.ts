@@ -3,6 +3,14 @@ import axios from 'axios';
 import { ValidatorResponseInterface } from '@/interface/validator-response.interface';
 
 const errorHandler = (error: any) => {
+  if (typeof error === 'string') {
+    return {
+      success: false,
+      data: null,
+      message: error,
+    };
+  }
+
   if (axios.isAxiosError(error)) {
     const response = error.response?.data;
 

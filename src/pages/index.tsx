@@ -1,15 +1,20 @@
 import Head from 'next/head';
 import { useContext, useEffect } from 'react';
 
+import { notifications } from '@mantine/notifications';
 import ChatContainer from '@/components/ChatContainer';
 import NavHeader from '@/components/NavHeader';
 import { AuthContext } from '@/context/AuthContext';
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
 import { SocketIOContext } from '@/context/SocketIOContext';
 import { useAppDispatch } from '@/hooks/use-dispatch-selector';
-import { addMessageToGroupDetail, updateLastMessageGroup } from '@/redux-toolkit/feature/group/group.slice';
+import {
+  addMessageToGroupDetail, updateLastMessageGroup,
+} from '@/redux-toolkit/feature/group/group.slice';
 import { asyncMyGroup } from '@/redux-toolkit/feature/group/group.thunk';
-import { resetMessageTyping, updateMessageTyping } from '@/redux-toolkit/feature/message/message.slice';
+import {
+  resetMessageTyping, updateMessageTyping,
+} from '@/redux-toolkit/feature/message/message.slice';
 import { scrollToBottomMessageChat } from '@/utils/function';
 
 export default function Home() {
@@ -48,9 +53,15 @@ export default function Home() {
       });
 
       // Listen invite new group from other user, then re-fetch my group
-      listenInviteNewGroup(() => {
+      listenInviteNewGroup(({ group_id, invited_by }) => {
         // const { invited_by: invitedBy, group_id: groupId } = data;
         // console.log(`You have been invited to join group ${groupId} by ${invitedBy}`);
+
+        notifications.show({
+          title: 'New Group',
+          message: `You have been invited to join group ${group_id} by ${invited_by}`,
+          color: 'teal',
+        });
 
         dispatch(asyncMyGroup());
       });

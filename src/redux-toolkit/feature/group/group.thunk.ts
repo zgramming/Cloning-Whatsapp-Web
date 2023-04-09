@@ -64,11 +64,19 @@ export const asyncCreateGroupGroup = createAsyncThunk(
   async (data: GroupCreateGroupGroupDTO, { rejectWithValue }) => {
     try {
       const { name, participants, avatar } = data;
-      const result = await API.createGroupGroup({
-        name,
-        participants,
-        avatar,
+
+      const formData = new FormData();
+
+      formData.append('name', name);
+
+      // Send Array string into FormData
+      participants.forEach((participant) => {
+        formData.append('participants[]', participant);
       });
+
+      if (avatar) formData.append('avatar', avatar);
+
+      const result = await API.createGroupGroup(formData);
       return result;
     } catch (error) {
       const err = errorHandler(error);

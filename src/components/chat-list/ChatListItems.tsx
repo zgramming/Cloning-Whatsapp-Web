@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 
 import { Card, List, Transition } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { IconArchive, IconPinned, IconTrash, IconUser } from '@tabler/icons-react';
-import { useAppDispatch, useAppSelector } from '@/hooks/use-dispatch-selector';
+import { IconArchive, IconPinned, IconUser } from '@tabler/icons-react';
+import { useAppDispatch } from '@/hooks/use-dispatch-selector';
+import useMyGroupSelector from '@/hooks/use-my-group-selector';
 import { MyGroup } from '@/interface/group/group.me.interface';
 import { asyncCreateContact } from '@/redux-toolkit/feature/contact/contact.thunk';
-import { asyncMyGroup } from '@/redux-toolkit/feature/group/group.thunk';
 import { errorHandler } from '@/utils/error-handler';
 
 import ContextMenuItem from '../ContextMenuItem';
@@ -24,12 +24,7 @@ function ChatListItems() {
 
   const dispatch = useAppDispatch();
 
-  const { items, loading, error } = useAppSelector((state) => state.group);
-
-  useEffect(() => {
-    dispatch(asyncMyGroup());
-    return () => {};
-  }, [dispatch]);
+  const { error, items, loading } = useMyGroupSelector();
 
   // Effect for close context menu
   useEffect(() => {
@@ -54,10 +49,13 @@ function ChatListItems() {
           key={group.id}
           group={group}
           onRightClick={({ group: groupContext, points: pointContext }) => {
+            // Set right clicked group
             setRightClickedGroup(groupContext);
 
+            // Show context menu
             setShowContextMenu(true);
 
+            // Set context menu position
             setPoints(pointContext);
           }}
         />
@@ -105,13 +103,29 @@ function ChatListItems() {
                     }}
                   />
                 )}
-                <ContextMenuItem icon={<IconPinned size="1rem" />} text="Pin" color="green" onClick={() => {}} />
-                <ContextMenuItem icon={<IconTrash size="1rem" />} text="Hapus Chat" color="red" onClick={() => {}} />
+                <ContextMenuItem
+                  icon={<IconPinned size="1rem" />}
+                  text="Pin"
+                  color="green"
+                  onClick={() => {
+                    // TODO: Pin group
+                    notifications.show({
+                      title: 'Info',
+                      message: 'Fitur ini belum tersedia',
+                    });
+                  }}
+                />
                 <ContextMenuItem
                   icon={<IconArchive size="1rem" />}
                   text="Arsipkan Chat"
                   color="blue"
-                  onClick={() => {}}
+                  onClick={() => {
+                    // TODO: Archive group
+                    notifications.show({
+                      title: 'Info',
+                      message: 'Fitur ini belum tersedia',
+                    });
+                  }}
                 />
               </List>
             </Card>
