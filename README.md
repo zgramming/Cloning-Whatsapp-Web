@@ -14,11 +14,14 @@ Cloning Whatsapp Web
 
 - [x] Login
 - [x] Register
-- [x] Private Group
+- [x] Private Chat
+- [x] Group Chat
+- [x] Contact
+- [x] Profile
 - [x] Search person by phone number
 - [x] Realtime Chat
 - [x] Realtime indicator user is typing
-- [x] Realtime notify when user invited by another user to group
+- [x] Realtime notify when user invited group
 
 ## Environment Variables
 
@@ -61,15 +64,22 @@ Install application with NPM
 
 ## Demo
 
-https://user-images.githubusercontent.com/38829404/230294228-776658d7-84d5-4e35-8012-c533bce2d835.mp4
+Di bawah ini merupakan demo implementasi percakapan secara privat & group dengan tema **Mencari Takjil**
+
+
+https://user-images.githubusercontent.com/38829404/230758792-a0baea0b-18e7-4044-92fb-887776d5839f.mp4
 
 
 ## Roadmap
 
-- [ ] Group Chat
 - [ ] Indicator message is delivered, read, error
-- [ ] Setting Page
-- [ ] Story Page
+- [ ] Send Media (File, Image, Video, Voice Chat)
+- [ ] Pin Chat
+- [ ] Archive Chat
+- [ ] Displays past date time information like : Yesterday, 1 Week Ago etc...
+- [ ] Send Emoji
+- [ ] Setting
+- [ ] Story
 
 ## License
 
