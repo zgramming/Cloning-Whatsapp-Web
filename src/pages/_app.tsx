@@ -5,6 +5,8 @@ import { MantineProvider } from '@mantine/core';
 import type { AppProps } from 'next/app';
 import { Notifications } from '@mantine/notifications';
 import { Provider } from 'react-redux';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import SelectedChatListProvider from '@/context/SelectedChatListContext';
 import AuthProvider from '@/context/AuthContext';
 import RouteTransition from '@/components/RouteTransition';
@@ -12,6 +14,17 @@ import { store } from '@/redux-toolkit/store';
 import SocketIOProvider from '@/context/SocketIOContext';
 
 export default function App({ Component, pageProps }: AppProps) {
+  const { replace } = useRouter();
+  useEffect(() => {
+    const mobileViewSize = 768;
+
+    if (window.innerWidth <= mobileViewSize) {
+      replace('/unsupport');
+    }
+
+    return () => {};
+  }, [replace]);
+
   return (
     <Provider store={store}>
       <MantineProvider
