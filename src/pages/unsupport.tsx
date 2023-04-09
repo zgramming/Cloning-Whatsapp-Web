@@ -1,13 +1,15 @@
 import { Button, Card, Group, Text } from '@mantine/core';
 import Image from 'next/image';
 
+import ImageUnsupport from '../../public/images/unsupport-mobile-view.png';
+
 function Page() {
   return (
     <div className="min-h-screen bg-primary-teal">
       <div className="flex flex-col items-center justify-center min-h-screen p-5">
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section className="relative w-full h-56">
-            <Image alt="Unsupport mobile view " src="/images/unsupport-mobile-view.png" fill />
+            <Image alt="Unsupport mobile view" src={ImageUnsupport} fill />
           </Card.Section>
 
           <Group position="apart" mt="md" mb="xs">

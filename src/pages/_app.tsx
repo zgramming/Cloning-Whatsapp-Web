@@ -18,7 +18,7 @@ export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     const mobileViewSize = 768;
 
-    if (window.innerWidth <= mobileViewSize) {
+    if (typeof window !== 'undefined' && window.innerWidth < mobileViewSize) {
       replace('/unsupport');
     }
 
