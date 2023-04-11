@@ -84,7 +84,11 @@ function DrawerChooseParticipantGroup() {
         <DrawerChatYourContact
           items={temporaryContact}
           onClick={onAddParticipantHandler}
-          builderClass={(contact) => (selectedParticipant.includes(contact) ? 'bg-green-200 hover:bg-green-400' : '')}
+          builderClass={(contact) => {
+            const isActive = selectedParticipant.includes(contact);
+            if (isActive) return 'bg-green-500 dark:bg-slate-600';
+            return '';
+          }}
         />
       </div>
 

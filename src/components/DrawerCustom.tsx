@@ -14,6 +14,7 @@ function DrawerCustom() {
           className={`
             absolute top-0 left-0 right-0 
             h-full z-10 bg-white shadow-lg
+            dark:bg-slate-800
         `}
           style={styles}
         >

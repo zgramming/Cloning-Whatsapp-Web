@@ -14,6 +14,7 @@ function DrawerChatTile({ avatar, name, description, className, onClick }: Drawe
       role="presentation"
       className={`
       flex flex-row items-center gap-3 p-3 hover:bg-gray-100 hover:cursor-pointer
+      dark:hover:bg-slate-700
       ${className}
       `}
       onClick={onClick}

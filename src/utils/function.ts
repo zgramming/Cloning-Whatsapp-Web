@@ -16,4 +16,12 @@ export const inserCharEveryNCharacter = (str: string = "why i'm so handsome", ch
   return arr.join(''); // convert the array back to a stringF
 };
 
+export const openInNewTab = (url: string) => {
+  const win = window.open(url, '_blank', 'noopener,noreferrer');
+
+  if (win) {
+    win.opener = null;
+  }
+};
+
 // Path: src\utils\function.ts

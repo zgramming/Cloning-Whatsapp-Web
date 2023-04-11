@@ -4,8 +4,11 @@ export const BASE_URL_GROUP_PROFILE_IMAGE_API = `${BASE_URL_API}/upload/group/pr
 
 export const KEY_COOKIES_LOGIN = process.env.NEXT_PUBLIC_KEY_COOKIES_LOGIN || 'token';
 export const KEY_COOKIES_USER = process.env.NEXT_PUBLIC_KEY_COOKIES_USER || 'user';
+export const KEY_COOKIES_CHAT_WALLPAPPER = 'chat_wallpaper';
+export const KEY_COOKIES_THEME = 'theme';
 
 export const PATH_DEFAULT_ASSET_IMAGE = '/images/default-image.png';
+export const PATH_AVATAR_DEVELOPER = '/images/developer-profile.jpeg';
 
 // Socket IO Emmit Event
 export const EMIT_EVENT_CONNECT = 'connected';

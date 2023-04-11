@@ -19,6 +19,8 @@ Cloning Whatsapp Web
 - [x] Contact
 - [x] Profile
 - [x] Search person by phone number
+- [x] Dynamic Theme (dark | light) mode
+- [x] Dynamic Walpapper Chat (custom color available)
 - [x] Realtime Chat
 - [x] Realtime indicator user is typing
 - [x] Realtime notify when user invited group
@@ -73,12 +75,12 @@ https://user-images.githubusercontent.com/38829404/230758792-a0baea0b-18e7-4044-
 ## Roadmap
 
 - [ ] Indicator message is delivered, read, error
+- [ ] Total unread message
 - [ ] Send Media (File, Image, Video, Voice Chat)
 - [ ] Pin Chat
 - [ ] Archive Chat
 - [ ] Displays past date time information like : Yesterday, 1 Week Ago etc...
 - [ ] Send Emoji
-- [ ] Setting
 - [ ] Story
 
 ## License

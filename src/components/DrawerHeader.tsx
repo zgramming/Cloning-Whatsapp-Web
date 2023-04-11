@@ -7,7 +7,12 @@ import { DrawerNavigationStackContext } from '@/context/DrawerNavigationStackCon
 function DrawerHeader({ title }: { title: string }) {
   const { pop } = useContext(DrawerNavigationStackContext);
   return (
-    <div className="flex flex-col justify-end h-28 p-5 bg-primary-tealdark text-white">
+    <div
+      className={`
+      flex flex-col justify-end h-28 p-5 bg-primary-tealdark text-white
+      dark:bg-slate-700
+      `}
+    >
       <div className="flex flex-row items-center gap-5">
         <ActionIcon onClick={() => pop()}>
           <IconArrowLeft color="white" />

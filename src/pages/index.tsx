@@ -82,7 +82,12 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="relative min-h-screen w-screen">
+      <div
+        className={`
+      relative min-h-screen w-screen
+      dark:bg-slate-800
+      `}
+      >
         <NavHeader />
         <ChatContainer />
       </div>

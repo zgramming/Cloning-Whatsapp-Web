@@ -2,7 +2,9 @@ import { ActionIcon, Avatar, Tooltip } from '@mantine/core';
 import { IconDotsVertical, IconSearch } from '@tabler/icons-react';
 import { GroupDetail, GroupDetailInterlocutors } from '@/interface/group/group.detail.interface';
 import {
-  BASE_URL_GROUP_PROFILE_IMAGE_API, BASE_URL_USER_PROFILE_IMAGE_API, PATH_DEFAULT_ASSET_IMAGE,
+  BASE_URL_GROUP_PROFILE_IMAGE_API,
+  BASE_URL_USER_PROFILE_IMAGE_API,
+  PATH_DEFAULT_ASSET_IMAGE,
 } from '@/utils/constant';
 
 function ChatMessageHeaderGroup({ name, avatar }: GroupDetail) {
@@ -36,7 +38,12 @@ function ChatMessageHeaderPrivate({ interlocutors }: { interlocutors: GroupDetai
 function ChatMessageHeader({ groupDetail }: { groupDetail: GroupDetail }) {
   const { interlocutors } = groupDetail;
   return (
-    <div className="h-16 flex flex-row items-center bg-gray-100 gap-3 px-5 py-3">
+    <div
+      className={`
+    h-16 flex flex-row items-center bg-gray-100 gap-3 px-5 py-3
+    dark:bg-slate-700 dark:text-white
+    `}
+    >
       {groupDetail.type === 'GROUP' && <ChatMessageHeaderGroup {...groupDetail} />}
       {groupDetail.type === 'PRIVATE' && <ChatMessageHeaderPrivate interlocutors={interlocutors} />}
       <div className="grow flex flex-wrap justify-end gap-5">

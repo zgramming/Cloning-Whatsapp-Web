@@ -106,7 +106,12 @@ function ChatMessageInput() {
   };
 
   return (
-    <div className="flex flex-row items-center bg-gray-100 gap-5 p-5">
+    <div
+      className={`
+      flex flex-row items-center bg-gray-100 gap-5 p-5
+      dark:bg-slate-800 dark:text-white
+    `}
+    >
       <div className="flex flex-wrap gap-3">
         <ActionIcon>
           <Tooltip label="Coming soon">

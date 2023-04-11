@@ -36,7 +36,12 @@ function ChatListHeader() {
   };
 
   return (
-    <div className="h-16 bg-gray-100 px-5 py-3">
+    <div
+      className={`
+      h-16 bg-gray-100 px-5 py-3
+      dark:bg-slate-700
+    `}
+    >
       <div className="flex flex-row items-center h-full">
         <ChatListHeaderAvatar />
         <div className="grow flex flex-wrap justify-end gap-5">

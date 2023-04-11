@@ -8,8 +8,9 @@ function ChatList() {
   return (
     <div
       className={`
-      relative basis-[40%] flex flex-col shadow
-      xl:basis-[30%]
+      relative basis-[40%] flex flex-col shadow xl:basis-[30%]
+      dark:bg-slate-800
+      
     `}
     >
       <DrawerCustom />
