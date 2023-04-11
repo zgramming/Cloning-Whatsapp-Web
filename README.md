@@ -2,6 +2,8 @@
 
 # Cloning Whatsapp Web
 
+![3](https://user-images.githubusercontent.com/38829404/231115894-c27b05ce-7efe-43b0-af5a-e00c5a1fdda8.png)
+
 Cloning Whatsapp Web
 
 ## Tech Stack
@@ -63,6 +65,15 @@ Install application with NPM
 #### Drawer Chat
 
 ![Login](github/screenshots/5.%20Drawer%20Chat.png)
+
+### Dynamic Theme (Light | Dark) mode
+
+![2  setting - theme](https://user-images.githubusercontent.com/38829404/231118752-83e3b01f-6b6d-4032-a9f4-1458b842913e.gif)
+
+### Dynamic Walpapper Chat
+
+![1  setting - chat walpapper](https://user-images.githubusercontent.com/38829404/231118814-9e9d065a-dacb-4cf9-b60d-7212a65e8fd8.gif)
+
 
 ## Demo
 
