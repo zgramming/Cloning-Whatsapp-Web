@@ -3,25 +3,18 @@ import { getCookie, removeCookies, setCookie } from 'cookies-next';
 
 import { LoginDTO } from '@/interface/auth/dto/login.dto';
 import { RegisterDTO } from '@/interface/auth/dto/register.dto';
-import {
-  ContactCreateResponseInterface,
-} from '@/interface/contact/contact.create-response.interface';
+import { ContactCreateResponseInterface } from '@/interface/contact/contact.create-response.interface';
 import { ContactMeInterface } from '@/interface/contact/contact.me.interface';
 import { ContactCreateDTO } from '@/interface/contact/dto/contact.create.dto';
-import {
-  GroupCreateGroupGroupResponseInterface,
-} from '@/interface/group/group.create-group-group-response.interface';
-import {
-  GroupPrivateCreateResponseInterface,
-} from '@/interface/group/group.create-group-private-response.interface';
-import { GroupDetailInterface } from '@/interface/group/group.detail.interface';
-import { MyGroupInterface } from '@/interface/group/group.me.interface';
+// eslint-disable-next-line max-len
+import { ConversationGroupCreateResponseInterface } from '@/interface/group/conversation.create-group-response.interface';
+// eslint-disable-next-line max-len
+import { ConversationPrivateCreateResponseInterface } from '@/interface/group/conversation.create-private-response.interface';
+import { ConversationDetailInterface } from '@/interface/group/conversation.detail.interface';
+import { MyConversationInterface } from '@/interface/group/conversation.me.interface';
 import { LoginResponseInterface } from '@/interface/login-response.interface';
 import { MessageCreateDTO } from '@/interface/message/dto/message.create.dto';
-import {
-  MessageCreateResponseInterface,
-} from '@/interface/message/message.create-response.interface';
-import { MessageInterface } from '@/interface/message/message.interface';
+import { MessageCreateResponseInterface } from '@/interface/message/message.create-response.interface';
 import { RegisterResponseInterface } from '@/interface/register-response.interface';
 import { UserUpdateProfileDTO } from '@/interface/user/dto/user.update-profile.dto';
 import { UserSearchByPhoneInterface } from '@/interface/user/user-search-by-phone.interface';
@@ -49,7 +42,7 @@ class API {
     const { data } = await axios.post(`${BASE_URL_API}/login`, value);
     const result: LoginResponseInterface = data;
 
-    const { data: user } = await API.me(result.data.id);
+    const { data: user } = await API.me();
 
     setCookie(KEY_COOKIES_USER, JSON.stringify(user), {
       path: '/',
@@ -64,8 +57,10 @@ class API {
     return result;
   }
 
-  static async me(id: string) {
-    const { data } = await axios.get(`${BASE_URL_API}/user/${id}`);
+  static async me() {
+    const { data } = await axios.get(`${BASE_URL_API}/user/me`, {
+      ...bearerHeader(),
+    });
     const result: UserResponseInterface = data;
     return result;
   }
@@ -132,61 +127,52 @@ class API {
     return result;
   }
 
-  // Group
+  // Conversation
 
-  static async getGroupDetail(id: string) {
-    const { data } = await axios.get(`${BASE_URL_API}/group/${id}`, {
+  static async getConversationDetail(id: string) {
+    const { data } = await axios.get(`${BASE_URL_API}/conversation/${id}`, {
       ...bearerHeader(),
     });
-    const result: GroupDetailInterface = data;
+    const result: ConversationDetailInterface = data;
     return result;
   }
 
-  static async getMyGroup() {
-    const { data } = await axios.get(`${BASE_URL_API}/group/me`, {
+  static async getMyConversation() {
+    const { data } = await axios.get(`${BASE_URL_API}/conversation/me`, {
       ...bearerHeader(),
     });
-    const result: MyGroupInterface = data;
+    const result: MyConversationInterface = data;
     return result;
   }
 
-  static async createPrivateGroup(userId: string) {
+  static async createPrivateConversation(userId: string) {
     const { data } = await axios.post(
-      `${BASE_URL_API}/group/private`,
+      `${BASE_URL_API}/conversation/private`,
       { userId },
       {
         ...bearerHeader(),
       },
     );
-    const result: GroupPrivateCreateResponseInterface = data;
+    const result: ConversationPrivateCreateResponseInterface = data;
     return result;
   }
 
-  static async createGroupGroup(formData: FormData) {
-    const { data } = await axios.post(`${BASE_URL_API}/group/group`, formData, {
+  static async createGroupConversation(formData: FormData) {
+    const { data } = await axios.post(`${BASE_URL_API}/conversation/group`, formData, {
       ...bearerHeader(),
     });
-    const result: GroupCreateGroupGroupResponseInterface = data;
+    const result: ConversationGroupCreateResponseInterface = data;
     return result;
   }
 
   // Message
 
-  static async getMessageByGroupId(groupId: string) {
-    const { data } = await axios.get(`${BASE_URL_API}/message/group/${groupId}`, {
-      ...bearerHeader(),
-    });
-
-    const result: MessageInterface = data;
-    return result;
-  }
-
-  static async sendMessage({ from, group_id, message, type }: MessageCreateDTO) {
+  static async sendMessage({ from, conversation_id, message, type }: MessageCreateDTO) {
     const { data } = await axios.post(
       `${BASE_URL_API}/message`,
       {
         from,
-        group_id,
+        conversation_id,
         message,
         type,
       },
@@ -208,11 +194,11 @@ class API {
     return result;
   }
 
-  static async addContact({ groupId, userId }: ContactCreateDTO) {
+  static async addContact({ conversationId, userId }: ContactCreateDTO) {
     const { data } = await axios.post(
       `${BASE_URL_API}/contact`,
       {
-        group_id: groupId,
+        conversation_id: conversationId,
         user_id: userId,
       },
       {

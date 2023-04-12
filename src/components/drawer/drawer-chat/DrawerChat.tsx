@@ -16,7 +16,7 @@ function DrawerChat() {
   const { groupedContactByFirstChar } = useContactSelector();
 
   const { push, popAll: closeAllDrawerStack } = useContext(DrawerNavigationStackContext);
-  const { setId: emitGroupId } = useContext(SelectedChatListContext);
+  const { setConversationId } = useContext(SelectedChatListContext);
 
   return (
     <div className="flex flex-col min-h-full">
@@ -49,8 +49,8 @@ function DrawerChat() {
           <h3 className="p-3 font-semibold">Kontak Kamu</h3>
           <DrawerChatYourContact
             items={groupedContactByFirstChar}
-            onClick={({ group_id: groupId }) => {
-              emitGroupId(groupId);
+            onClick={({ conversation_id: conversationId }) => {
+              setConversationId(conversationId);
               closeAllDrawerStack();
             }}
           />

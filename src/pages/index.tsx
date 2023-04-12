@@ -8,19 +8,17 @@ import { AuthContext } from '@/context/AuthContext';
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
 import { SocketIOContext } from '@/context/SocketIOContext';
 import { useAppDispatch } from '@/hooks/use-dispatch-selector';
-import {
-  addMessageToGroupDetail, updateLastMessageGroup,
-} from '@/redux-toolkit/feature/group/group.slice';
-import { asyncMyGroup } from '@/redux-toolkit/feature/group/group.thunk';
-import {
-  resetMessageTyping, updateMessageTyping,
-} from '@/redux-toolkit/feature/message/message.slice';
+import { addMessageToGroupDetail, updateLastMessageGroup } from '@/redux-toolkit/feature/group/conversation.slice';
+import { asyncMyGroup } from '@/redux-toolkit/feature/group/conversation.thunk';
+import { resetMessageTyping, updateMessageTyping } from '@/redux-toolkit/feature/message/message.slice';
 import { scrollToBottomMessageChat } from '@/utils/function';
 
 export default function Home() {
   const { user } = useContext(AuthContext);
-  const { connect, disconnect, listenTyping, listenSendMessage, listenInviteNewGroup } = useContext(SocketIOContext);
-  const { id: selectedChatGroupId } = useContext(SelectedChatListContext);
+  // eslint-disable-next-line max-len, operator-linebreak
+  const { connect, disconnect, listenTyping, listenSendMessage, listenInviteNewConversation } =
+    useContext(SocketIOContext);
+  const { conversationId } = useContext(SelectedChatListContext);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -28,13 +26,13 @@ export default function Home() {
       connect(user.id);
 
       listenTyping((data) => {
-        const { name, group_id: groupId, is_typing: isTyping } = data;
+        const { name, conversation_id: conversationIdTyping, is_typing: isTyping } = data;
 
         if (isTyping) {
           dispatch(
             updateMessageTyping({
               name,
-              group_id: groupId,
+              conversation_id: conversationIdTyping,
               is_typing: isTyping,
             }),
           );
@@ -47,19 +45,16 @@ export default function Home() {
         dispatch(updateLastMessageGroup(data));
         dispatch(addMessageToGroupDetail(data));
 
-        if (selectedChatGroupId) {
+        if (conversationId) {
           scrollToBottomMessageChat();
         }
       });
 
       // Listen invite new group from other user, then re-fetch my group
-      listenInviteNewGroup(({ group_id, invited_by }) => {
-        // const { invited_by: invitedBy, group_id: groupId } = data;
-        // console.log(`You have been invited to join group ${groupId} by ${invitedBy}`);
-
+      listenInviteNewConversation(({ conversation_id, invited_by }) => {
         notifications.show({
           title: 'New Group',
-          message: `You have been invited to join group ${group_id} by ${invited_by}`,
+          message: `You have been invited to join group ${conversation_id} by ${invited_by}`,
           color: 'teal',
         });
 
@@ -72,7 +67,16 @@ export default function Home() {
         disconnect(user.id);
       }
     };
-  }, [connect, disconnect, dispatch, listenInviteNewGroup, listenSendMessage, listenTyping, selectedChatGroupId, user]);
+  }, [
+    connect,
+    disconnect,
+    dispatch,
+    listenSendMessage,
+    listenTyping,
+    conversationId,
+    user,
+    listenInviteNewConversation,
+  ]);
 
   return (
     <>

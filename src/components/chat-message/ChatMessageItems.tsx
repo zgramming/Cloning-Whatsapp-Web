@@ -1,11 +1,11 @@
 import { useContext } from 'react';
 
 import { ApplicationConfigContext } from '@/context/ApplicationConfigContext';
-import { GroupDetailMessage } from '@/interface/group/group.detail.interface';
+import { ConversationDetailMessage } from '@/interface/group/conversation.detail.interface';
 
 import ChatMessageItem from './ChatMessageItem';
 
-function ChatMessageItems({ messages }: { messages: GroupDetailMessage[] }) {
+function ChatMessageItems({ messages }: { messages: ConversationDetailMessage[] }) {
   const { chatWallpaperColor } = useContext(ApplicationConfigContext);
 
   return (

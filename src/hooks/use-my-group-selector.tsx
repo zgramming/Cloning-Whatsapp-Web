@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { asyncMyGroup } from '@/redux-toolkit/feature/group/group.thunk';
+import { asyncMyGroup } from '@/redux-toolkit/feature/group/conversation.thunk';
 
 import { useAppDispatch, useAppSelector } from './use-dispatch-selector';
 

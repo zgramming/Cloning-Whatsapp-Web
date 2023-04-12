@@ -1,15 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { GroupDetail, GroupDetailInterface } from '@/interface/group/group.detail.interface';
-import { MyGroup, MyGroupInterface } from '@/interface/group/group.me.interface';
 import { MessageCreateResponseInterface } from '@/interface/message/message.create-response.interface';
+import { ConversationDetail, ConversationDetailInterface } from '@/interface/group/conversation.detail.interface';
+import { MyConversation, MyConversationInterface } from '@/interface/group/conversation.me.interface';
 
 type SliceType = {
-  items: MyGroup[];
+  items: MyConversation[];
   loading: boolean;
   error?: string;
 
   detail: {
-    data?: GroupDetail;
+    data?: ConversationDetail;
     loading: boolean;
     error?: string;
   };
@@ -31,7 +31,7 @@ const groupSlice = createSlice({
   name: 'inbox',
   reducers: {
     initializeMyGroup: (state, action) => {
-      const { data }: MyGroupInterface = action.payload;
+      const { data }: MyConversationInterface = action.payload;
       state.items = [...data];
     },
     setLoadingMyGroup: (state, action) => {
@@ -42,7 +42,7 @@ const groupSlice = createSlice({
     },
 
     initializeDetailGroup: (state, action) => {
-      const { data }: GroupDetailInterface = action.payload;
+      const { data }: ConversationDetailInterface = action.payload;
       state.detail.data = data;
     },
     setLoadingDetailGroup: (state, action) => {
@@ -56,7 +56,7 @@ const groupSlice = createSlice({
       const response: MessageCreateResponseInterface = action.payload;
       const { data } = response;
 
-      const index = state.items.findIndex((item) => item.id === data.group_id);
+      const index = state.items.findIndex((item) => item.id === data.conversation_id);
       if (index !== -1) {
         state.items[index] = {
           ...state.items[index],
@@ -68,9 +68,9 @@ const groupSlice = createSlice({
     addMessageToGroupDetail: (state, action) => {
       const response: MessageCreateResponseInterface = action.payload;
       const { data } = response;
-      const { group_id: groupId } = data;
+      const { conversation_id: conversationId } = data;
 
-      if (state.detail.data?.id !== groupId) return;
+      if (state.detail.data?.id !== conversationId) return;
 
       state.detail.data?.messages.push({ ...data });
     },

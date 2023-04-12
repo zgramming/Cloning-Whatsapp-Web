@@ -11,9 +11,9 @@ import { DrawerNavigationStackContext } from '@/context/DrawerNavigationStackCon
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
 import { useAppDispatch } from '@/hooks/use-dispatch-selector';
 import { ContactMe } from '@/interface/contact/contact.me.interface';
-import { asyncCreateGroupGroup } from '@/redux-toolkit/feature/group/group.thunk';
 import { PATH_DEFAULT_ASSET_IMAGE } from '@/utils/constant';
 import { errorHandler } from '@/utils/error-handler';
+import { asyncCreateGroupConversation } from '@/redux-toolkit/feature/group/conversation.thunk';
 
 type DrawerCreateGroupProps = {
   participants: ContactMe[];
@@ -183,7 +183,7 @@ function DrawerCreateGroupAvatar({ onSelectedImage }: DrawerCreateGroupAvatarPro
 function DrawerCreateGroup({ participants }: DrawerCreateGroupProps) {
   const dispatch = useAppDispatch();
 
-  const { setId } = useContext(SelectedChatListContext);
+  const { setConversationId } = useContext(SelectedChatListContext);
   const { popAll: closeAllStackDrawer } = useContext(DrawerNavigationStackContext);
 
   const form = useForm({
@@ -207,7 +207,7 @@ function DrawerCreateGroup({ participants }: DrawerCreateGroupProps) {
       const { name } = form.values;
       const participantIds = participants.map((item) => item.user_id);
       const { data, message } = await dispatch(
-        asyncCreateGroupGroup({
+        asyncCreateGroupConversation({
           name,
           participants: participantIds,
           avatar: selectedFile,
@@ -215,7 +215,7 @@ function DrawerCreateGroup({ participants }: DrawerCreateGroupProps) {
       ).unwrap();
 
       // Set selected chat list id
-      setId(data.id);
+      setConversationId(data.id);
 
       // Close all stack drawer
       closeAllStackDrawer();

@@ -3,7 +3,7 @@ import { ContactCreateDTO } from '@/interface/contact/dto/contact.create.dto';
 import API from '@/utils/api';
 import { errorHandler } from '@/utils/error-handler';
 
-import { asyncMyGroup } from '../group/group.thunk';
+import { asyncMyGroup } from '../group/conversation.thunk';
 import { initializeMyContact, setLoadingMyContact } from './contact.slice';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -31,8 +31,8 @@ export const asyncCreateContact = createAsyncThunk(
   'contact/createContact',
   async (payload: ContactCreateDTO, { dispatch, rejectWithValue }) => {
     try {
-      const { groupId, userId } = payload;
-      const response = await API.addContact({ groupId, userId });
+      const { conversationId, userId } = payload;
+      const response = await API.addContact({ conversationId, userId });
 
       if (!response.status) {
         throw new Error(response.message);

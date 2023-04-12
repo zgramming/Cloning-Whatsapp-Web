@@ -16,11 +16,11 @@ function ChatMessageInput() {
   const [isTyping, setIsTyping] = useState<boolean>(false);
 
   const { user } = useContext(AuthContext);
-  const { id: groupId } = useContext(SelectedChatListContext);
+  const { conversationId } = useContext(SelectedChatListContext);
   const {
     typing: emitTyping,
     sendMessage: emitSendMessage,
-    inviteNewGroup: emitInviteNewGroup,
+    inviteNewConversation: emitInviteNewConversation,
   } = useContext(SocketIOContext);
 
   const messages = useAppSelector((state) => state.group.detail.data?.messages ?? []);
@@ -29,7 +29,7 @@ function ChatMessageInput() {
 
   const onTypingHandler = () => {
     const clearTyping = () => {
-      emitTyping({ name: user?.name || '', group_id: groupId || '', is_typing: false });
+      emitTyping({ name: user?.name || '', conversation_id: conversationId || '', is_typing: false });
       setIsTyping(false);
     };
 
@@ -37,7 +37,7 @@ function ChatMessageInput() {
       setIsTyping(true);
       emitTyping({
         name: user?.name || '',
-        group_id: groupId || '',
+        conversation_id: conversationId || '',
         is_typing: true,
       });
 
@@ -62,7 +62,7 @@ function ChatMessageInput() {
       const result = await dispatch(
         asyncSendMessage({
           from: user?.id || '',
-          group_id: groupId || '',
+          conversation_id: conversationId || '',
           message,
           type: 'TEXT',
           is_new_chat: isNewChat,
@@ -74,8 +74,8 @@ function ChatMessageInput() {
 
       /// Update group list with new user when is first time chat
       if (isNewChat) {
-        emitInviteNewGroup({
-          group_id: groupId || '',
+        emitInviteNewConversation({
+          conversation_id: conversationId || '',
           invited_by: user?.id || '',
         });
       }

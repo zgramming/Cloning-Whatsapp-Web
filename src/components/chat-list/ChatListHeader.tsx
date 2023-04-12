@@ -18,7 +18,7 @@ function ChatListHeader() {
   const { replace } = useRouter();
   const { disconnect } = useContext(SocketIOContext);
   const { push } = useContext(DrawerNavigationStackContext);
-  const { setId: setSelectedChat } = useContext(SelectedChatListContext);
+  const { setConversationId } = useContext(SelectedChatListContext);
   const { user, setUser } = useContext(AuthContext);
 
   const onLogout = () => {
@@ -31,7 +31,7 @@ function ChatListHeader() {
     API.logout();
     disconnect(user?.id || '');
     setUser(undefined);
-    setSelectedChat(undefined);
+    setConversationId(undefined);
     replace(routes.login);
   };
 

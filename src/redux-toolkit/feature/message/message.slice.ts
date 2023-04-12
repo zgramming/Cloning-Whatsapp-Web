@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 type SliceType = {
   messageTyping: {
-    group_id: string | undefined;
+    conversation_id: string | undefined;
     name: string | undefined;
     is_typing: boolean;
   };
@@ -11,7 +11,7 @@ type SliceType = {
 const initialState: SliceType = {
   messageTyping: {
     name: undefined,
-    group_id: undefined,
+    conversation_id: undefined,
     is_typing: false,
   },
 };
@@ -21,15 +21,15 @@ const messageSlice = createSlice({
   name: 'message',
   reducers: {
     updateMessageTyping: (state, action) => {
-      const { group_id: groupId, name, is_typing: isTyping } = action.payload;
+      const { conversation_id: conversationId, name, is_typing: isTyping } = action.payload;
       state.messageTyping.name = name;
-      state.messageTyping.group_id = groupId;
+      state.messageTyping.conversation_id = conversationId;
       state.messageTyping.is_typing = isTyping;
     },
     resetMessageTyping: (state) => {
       state.messageTyping.name = undefined;
       state.messageTyping.is_typing = false;
-      state.messageTyping.group_id = undefined;
+      state.messageTyping.conversation_id = undefined;
     },
   },
 });

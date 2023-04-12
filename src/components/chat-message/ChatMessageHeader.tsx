@@ -1,13 +1,13 @@
 import { ActionIcon, Avatar, Tooltip } from '@mantine/core';
 import { IconDotsVertical, IconSearch } from '@tabler/icons-react';
-import { GroupDetail, GroupDetailInterlocutors } from '@/interface/group/group.detail.interface';
+import { ConversationDetail, ConversationDetailInterlocutors } from '@/interface/group/conversation.detail.interface';
 import {
   BASE_URL_GROUP_PROFILE_IMAGE_API,
   BASE_URL_USER_PROFILE_IMAGE_API,
   PATH_DEFAULT_ASSET_IMAGE,
 } from '@/utils/constant';
 
-function ChatMessageHeaderGroup({ name, avatar }: GroupDetail) {
+function ChatMessageHeaderGroup({ name, avatar }: ConversationDetail) {
   const src = avatar ? `${BASE_URL_GROUP_PROFILE_IMAGE_API}/${avatar}` : PATH_DEFAULT_ASSET_IMAGE;
 
   return (
@@ -20,7 +20,7 @@ function ChatMessageHeaderGroup({ name, avatar }: GroupDetail) {
   );
 }
 
-function ChatMessageHeaderPrivate({ interlocutors }: { interlocutors: GroupDetailInterlocutors }) {
+function ChatMessageHeaderPrivate({ interlocutors }: { interlocutors: ConversationDetailInterlocutors }) {
   const src = interlocutors.user.avatar
     ? `${BASE_URL_USER_PROFILE_IMAGE_API}/${interlocutors.user.avatar}`
     : PATH_DEFAULT_ASSET_IMAGE;
@@ -35,8 +35,8 @@ function ChatMessageHeaderPrivate({ interlocutors }: { interlocutors: GroupDetai
   );
 }
 
-function ChatMessageHeader({ groupDetail }: { groupDetail: GroupDetail }) {
-  const { interlocutors } = groupDetail;
+function ChatMessageHeader({ conversation }: { conversation: ConversationDetail }) {
+  const { interlocutors } = conversation;
   return (
     <div
       className={`
@@ -44,8 +44,8 @@ function ChatMessageHeader({ groupDetail }: { groupDetail: GroupDetail }) {
     dark:bg-slate-700 dark:text-white
     `}
     >
-      {groupDetail.type === 'GROUP' && <ChatMessageHeaderGroup {...groupDetail} />}
-      {groupDetail.type === 'PRIVATE' && <ChatMessageHeaderPrivate interlocutors={interlocutors} />}
+      {conversation.type === 'GROUP' && <ChatMessageHeaderGroup {...conversation} />}
+      {conversation.type === 'PRIVATE' && <ChatMessageHeaderPrivate interlocutors={interlocutors} />}
       <div className="grow flex flex-wrap justify-end gap-5">
         <ActionIcon>
           <Tooltip label="Coming Soon">

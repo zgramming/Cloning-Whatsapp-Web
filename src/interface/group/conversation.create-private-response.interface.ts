@@ -1,10 +1,10 @@
-export interface GroupPrivateCreateResponseInterface {
+export interface ConversationPrivateCreateResponseInterface {
   success: boolean;
   message: string;
-  data: GroupPrivateCreateResponse;
+  data: ConversationPrivateCreateResponse;
 }
 
-export interface GroupPrivateCreateResponse {
+export interface ConversationPrivateCreateResponse {
   id: string;
   name: string;
   code: string;
