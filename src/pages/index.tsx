@@ -37,7 +37,11 @@ export default function Home() {
             }),
           );
         } else {
-          dispatch(resetMessageTyping());
+          dispatch(
+            resetMessageTyping({
+              conversation_id: conversationIdTyping,
+            }),
+          );
         }
       });
 
@@ -68,13 +72,13 @@ export default function Home() {
       }
     };
   }, [
+    user,
+    conversationId,
     connect,
     disconnect,
     dispatch,
     listenSendMessage,
     listenTyping,
-    conversationId,
-    user,
     listenInviteNewConversation,
   ]);
 

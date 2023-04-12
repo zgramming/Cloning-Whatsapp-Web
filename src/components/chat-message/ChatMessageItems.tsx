@@ -10,15 +10,16 @@ function ChatMessageItems({ messages }: { messages: ConversationDetailMessage[] 
 
   return (
     <div
-      id="bottom-chat-message"
-      className="flex flex-col justify-end gap-5 p-5 h-full"
+      className="grow overflow-auto"
       style={{
         backgroundColor: chatWallpaperColor,
       }}
     >
-      {messages.map((message, index) => (
-        <ChatMessageItem key={`${message.id}_${index + 1}`} message={message} />
-      ))}
+      <div id="bottom-chat-message" className="flex flex-col justify-end gap-5 p-5">
+        {messages.map((message, index) => (
+          <ChatMessageItem key={`${message.id}_${index + 1}`} message={message} />
+        ))}
+      </div>
     </div>
   );
 }

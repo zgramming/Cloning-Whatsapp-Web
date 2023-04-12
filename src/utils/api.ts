@@ -42,14 +42,14 @@ class API {
     const { data } = await axios.post(`${BASE_URL_API}/login`, value);
     const result: LoginResponseInterface = data;
 
-    const { data: user } = await API.me();
-
-    setCookie(KEY_COOKIES_USER, JSON.stringify(user), {
+    setCookie(KEY_COOKIES_LOGIN, result.token, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7,
     });
 
-    setCookie(KEY_COOKIES_LOGIN, result.token, {
+    const { data: user } = await API.me();
+
+    setCookie(KEY_COOKIES_USER, JSON.stringify(user), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7,
     });

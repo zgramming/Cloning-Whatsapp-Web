@@ -17,7 +17,11 @@ function ChatMessageItem({ message }: { message: ConversationDetailMessage }) {
     <div
       key={id}
       className={`
-        ${isFromMe ? 'self-end bg-primary-teal text-white' : 'self-start bg-white shadow-lg'}
+        ${
+          isFromMe
+            ? 'self-end bg-primary-teal text-white'
+            : 'self-start bg-white shadow-lg dark:bg-slate-700 dark:text-white'
+        }
         flex flex-col gap-2 px-5 py-3 rounded-lg
       `}
     >

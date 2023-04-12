@@ -34,7 +34,12 @@ function ChatMessage() {
 
   if (!conversationId) {
     return (
-      <div className="grow flex flex-col items-center justify-center">
+      <div
+        className={`
+      grow flex flex-col items-center justify-center
+      dark:bg-gray-800
+      `}
+      >
         <div className="text-2xl">Pilih chat untuk memulai</div>
       </div>
     );
@@ -49,9 +54,7 @@ function ChatMessage() {
   return (
     <div className="grow flex flex-col">
       <ChatMessageHeader conversation={detailGroup} />
-      <div className="grow overflow-auto">
-        <ChatMessageItems messages={messages} />
-      </div>
+      <ChatMessageItems messages={messages} />
       <ChatMessageInput />
     </div>
   );

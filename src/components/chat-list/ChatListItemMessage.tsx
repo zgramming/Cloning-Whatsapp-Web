@@ -29,11 +29,8 @@ function ChatListItemMessageIndicator({ conversation }: { conversation: MyConver
 }
 
 function ChatListItemMessageDescription({ last_msg, id }: MyConversation) {
-  const {
-    conversation_id: conversationId,
-    is_typing: isTyping,
-    name,
-  } = useAppSelector((state) => state.message.messageTyping);
+  const mapTyping = useAppSelector((state) => state.message.messageTyping);
+  const { conversation_id: conversationId, is_typing: isTyping, name } = mapTyping[id] || false;
 
   if (isTyping && conversationId === id) {
     return <div className="font-semibold text-primary-teal text-xs line-clamp-1">{`${name} sedang mengetik ...`}</div>;
