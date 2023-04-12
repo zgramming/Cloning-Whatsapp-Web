@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 
 import { AuthContext } from '@/context/AuthContext';
-import { GroupDetailMessage } from '@/interface/group/group.detail.interface';
+import { ConversationDetailMessage } from '@/interface/group/conversation.detail.interface';
 
-function ChatMessageItem({ message }: { message: GroupDetailMessage }) {
+function ChatMessageItem({ message }: { message: ConversationDetailMessage }) {
   const { user } = useContext(AuthContext);
 
   const { id, from, message: msg, created_at: createdAt } = message;
@@ -17,7 +17,11 @@ function ChatMessageItem({ message }: { message: GroupDetailMessage }) {
     <div
       key={id}
       className={`
-        ${isFromMe ? 'self-end bg-primary-teal text-white' : 'self-start bg-white shadow-lg'}
+        ${
+          isFromMe
+            ? 'self-end bg-primary-teal text-white'
+            : 'self-start bg-white shadow-lg dark:bg-slate-700 dark:text-white'
+        }
         flex flex-col gap-2 px-5 py-3 rounded-lg
       `}
     >

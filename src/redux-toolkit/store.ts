@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import contactSlice from './feature/contact/contact.slice';
-import groupSlice from './feature/group/group.slice';
+import groupSlice from './feature/group/conversation.slice';
 import messageSlice from './feature/message/message.slice';
 import userFilteredPhoneSlice from './feature/user/user-filtered-phone.slice';
 

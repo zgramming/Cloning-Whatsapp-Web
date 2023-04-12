@@ -3,17 +3,17 @@ import { MessageCreateDTO } from '@/interface/message/dto/message.create.dto';
 import API from '@/utils/api';
 import { errorHandler } from '@/utils/error-handler';
 
-import { addMessageToGroupDetail, updateLastMessageGroup } from '../group/group.slice';
-import { asyncMyGroup } from '../group/group.thunk';
+import { addMessageToGroupDetail, updateLastMessageGroup } from '../group/conversation.slice';
+import { asyncMyGroup } from '../group/conversation.thunk';
 
 // eslint-disable-next-line import/prefer-default-export
 export const asyncSendMessage = createAsyncThunk(
   'message/asyncSendMessage',
-  async ({ from, group_id, message, type, is_new_chat }: MessageCreateDTO, { dispatch, rejectWithValue }) => {
+  async ({ from, conversation_id, message, type, is_new_chat }: MessageCreateDTO, { dispatch, rejectWithValue }) => {
     try {
       const result = await API.sendMessage({
         from,
-        group_id,
+        conversation_id,
         message,
         type,
         is_new_chat,

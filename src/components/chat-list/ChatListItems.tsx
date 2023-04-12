@@ -5,22 +5,22 @@ import { notifications } from '@mantine/notifications';
 import { IconArchive, IconPinned, IconUser } from '@tabler/icons-react';
 import { useAppDispatch } from '@/hooks/use-dispatch-selector';
 import useMyGroupSelector from '@/hooks/use-my-group-selector';
-import { MyGroup } from '@/interface/group/group.me.interface';
 import { asyncCreateContact } from '@/redux-toolkit/feature/contact/contact.thunk';
 import { errorHandler } from '@/utils/error-handler';
 
 import ContextMenuItem from '../ContextMenuItem';
 import ChatListSkeleton from '../skeleton/ChatListSkeleton';
 import ChatListItem from './ChatListItem';
+import { MyConversation } from '@/interface/group/conversation.me.interface';
 
 function ChatListItems() {
-  const [rightClickedGroup, setRightClickedGroup] = useState<MyGroup | undefined>();
+  const [rightClickedConversation, setRightClickedConversation] = useState<MyConversation | undefined>();
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [points, setPoints] = useState({ x: 0, y: 0 });
 
   const { x, y } = points;
-  const isGroup = rightClickedGroup?.type === 'GROUP';
-  const notYetInContact = rightClickedGroup?.interlocutors?.already_on_contact === false && !isGroup;
+  const isGroup = rightClickedConversation?.type === 'GROUP';
+  const notYetInContact = rightClickedConversation?.interlocutors?.already_on_contact === false && !isGroup;
 
   const dispatch = useAppDispatch();
 
@@ -44,13 +44,13 @@ function ChatListItems() {
 
   return (
     <>
-      {items.map((group) => (
+      {items.map((conversation) => (
         <ChatListItem
-          key={group.id}
-          group={group}
-          onRightClick={({ group: groupContext, points: pointContext }) => {
+          key={conversation.id}
+          conversation={conversation}
+          onRightClick={({ conversation: conversationContext, points: pointContext }) => {
             // Set right clicked group
-            setRightClickedGroup(groupContext);
+            setRightClickedConversation(conversationContext);
 
             // Show context menu
             setShowContextMenu(true);
@@ -82,8 +82,8 @@ function ChatListItems() {
                       try {
                         const result = await dispatch(
                           asyncCreateContact({
-                            groupId: rightClickedGroup?.id || '',
-                            userId: rightClickedGroup?.interlocutors?.id || '',
+                            conversationId: rightClickedConversation?.id || '',
+                            userId: rightClickedConversation?.interlocutors?.id || '',
                           }),
                         ).unwrap();
 

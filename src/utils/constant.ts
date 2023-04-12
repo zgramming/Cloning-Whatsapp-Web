@@ -16,6 +16,6 @@ export const EMIT_EVENT_DISCONNECT = 'disconnect';
 export const EMIT_EVENT_CUSTOM_DISCONNECT = 'custom_disconnected';
 export const EMIT_EVENT_TYPING = 'typing';
 export const EMIT_EVENT_SEND_MESSAGE = 'send_message';
-export const EMIT_EVENT_INVITE_NEW_GROUP = 'invite_new_group';
+export const EMIT_EVENT_INVITE_NEW_CONVERSATION = 'invite_new_conversation';
 
 // Path: src\utils\constant.ts

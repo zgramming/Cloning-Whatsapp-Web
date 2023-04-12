@@ -3,15 +3,15 @@ import { useContext } from 'react';
 import { IconCheck } from '@tabler/icons-react';
 import { AuthContext } from '@/context/AuthContext';
 import { useAppSelector } from '@/hooks/use-dispatch-selector';
-import { MyGroup } from '@/interface/group/group.me.interface';
 import { inserCharEveryNCharacter } from '@/utils/function';
+import { MyConversation } from '@/interface/group/conversation.me.interface';
 
-function ChatListItemMessageIndicator({ group }: { group: MyGroup }) {
+function ChatListItemMessageIndicator({ conversation }: { conversation: MyConversation }) {
   const { user: userLogin } = useContext(AuthContext);
 
-  const isGroup = group.type === 'GROUP';
+  const isGroup = conversation.type === 'GROUP';
   if (isGroup) {
-    if (group.last_sender === userLogin?.id) {
+    if (conversation.last_sender === userLogin?.id) {
       return (
         <>
           <IconCheck size="1rem" />
@@ -21,33 +21,34 @@ function ChatListItemMessageIndicator({ group }: { group: MyGroup }) {
     }
   }
 
-  if (group.last_sender === userLogin?.id) {
+  if (conversation.last_sender === userLogin?.id) {
     return <IconCheck size="1rem" />;
   }
 
   return null;
 }
 
-function ChatListItemMessageDescription({ last_msg, id }: MyGroup) {
-  const { group_id: groupId, is_typing: isTyping, name } = useAppSelector((state) => state.message.messageTyping);
+function ChatListItemMessageDescription({ last_msg, id }: MyConversation) {
+  const mapTyping = useAppSelector((state) => state.message.messageTyping);
+  const { conversation_id: conversationId, is_typing: isTyping, name } = mapTyping[id] || false;
 
-  if (isTyping && groupId === id) {
+  if (isTyping && conversationId === id) {
     return <div className="font-semibold text-primary-teal text-xs line-clamp-1">{`${name} sedang mengetik ...`}</div>;
   }
 
   return <div>{last_msg}</div>;
 }
 
-function ChatListItemMessage({ group }: { group: MyGroup }) {
+function ChatListItemMessage({ conversation }: { conversation: MyConversation }) {
   function nameUser() {
-    let result = group.name;
+    let result = conversation.name;
 
     /// Condition when private chat
-    if (group.interlocutors) {
-      result = group.interlocutors.name;
+    if (conversation.interlocutors) {
+      result = conversation.interlocutors.name;
 
-      if (group.interlocutors.already_on_contact === false) {
-        result = group.interlocutors.phone;
+      if (conversation.interlocutors.already_on_contact === false) {
+        result = conversation.interlocutors.phone;
         result = inserCharEveryNCharacter(result, '-', 4);
       }
     }
@@ -59,8 +60,8 @@ function ChatListItemMessage({ group }: { group: MyGroup }) {
     <div className="grow flex flex-col gap-2 px-2">
       <div className="text-base">{nameUser()}</div>
       <div className="flex flex-row items-center gap-1 text-xs text-gray-500">
-        <ChatListItemMessageIndicator group={group} />
-        <ChatListItemMessageDescription {...group} />
+        <ChatListItemMessageIndicator conversation={conversation} />
+        <ChatListItemMessageDescription {...conversation} />
       </div>
     </div>
   );

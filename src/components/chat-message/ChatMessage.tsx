@@ -2,7 +2,7 @@ import { useContext, useEffect } from 'react';
 
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
 import { useAppDispatch, useAppSelector } from '@/hooks/use-dispatch-selector';
-import { asyncGroupDetail } from '@/redux-toolkit/feature/group/group.thunk';
+import { asyncConversationDetail } from '@/redux-toolkit/feature/group/conversation.thunk';
 import { scrollToBottomMessageChat } from '@/utils/function';
 
 import ChatMessageSkeleton from '../skeleton/ChatMessageSkeleton';
@@ -11,18 +11,18 @@ import ChatMessageInput from './ChatMessageInput';
 import ChatMessageItems from './ChatMessageItems';
 
 function ChatMessage() {
-  const { id: groupId } = useContext(SelectedChatListContext);
+  const { conversationId } = useContext(SelectedChatListContext);
   const { data: detailGroup, loading, error } = useAppSelector((state) => state.group.detail);
   const dispatch = useAppDispatch();
 
-  /// Every time groupId change, fetch group detail
+  /// Fetch conversation detail
   useEffect(() => {
-    if (groupId) {
-      dispatch(asyncGroupDetail(groupId));
+    if (conversationId) {
+      dispatch(asyncConversationDetail(conversationId));
     }
 
     return () => {};
-  }, [dispatch, groupId]);
+  }, [dispatch, conversationId]);
 
   /// Every time messages change, scroll to bottom
   useEffect(() => {
@@ -32,9 +32,14 @@ function ChatMessage() {
     return () => {};
   }, [detailGroup?.messages]);
 
-  if (!groupId) {
+  if (!conversationId) {
     return (
-      <div className="grow flex flex-col items-center justify-center">
+      <div
+        className={`
+      grow flex flex-col items-center justify-center
+      dark:bg-gray-800
+      `}
+      >
         <div className="text-2xl">Pilih chat untuk memulai</div>
       </div>
     );
@@ -48,10 +53,8 @@ function ChatMessage() {
 
   return (
     <div className="grow flex flex-col">
-      <ChatMessageHeader groupDetail={detailGroup} />
-      <div className="grow overflow-auto">
-        <ChatMessageItems messages={messages} />
-      </div>
+      <ChatMessageHeader conversation={detailGroup} />
+      <ChatMessageItems messages={messages} />
       <ChatMessageInput />
     </div>
   );

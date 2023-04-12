@@ -2,18 +2,16 @@ import { createSlice } from '@reduxjs/toolkit';
 
 type SliceType = {
   messageTyping: {
-    group_id: string | undefined;
-    name: string | undefined;
-    is_typing: boolean;
+    [conversationId: string]: {
+      name: string | undefined;
+      conversation_id: string | undefined;
+      is_typing: boolean;
+    };
   };
 };
 
 const initialState: SliceType = {
-  messageTyping: {
-    name: undefined,
-    group_id: undefined,
-    is_typing: false,
-  },
+  messageTyping: {},
 };
 
 const messageSlice = createSlice({
@@ -21,15 +19,34 @@ const messageSlice = createSlice({
   name: 'message',
   reducers: {
     updateMessageTyping: (state, action) => {
-      const { group_id: groupId, name, is_typing: isTyping } = action.payload;
-      state.messageTyping.name = name;
-      state.messageTyping.group_id = groupId;
-      state.messageTyping.is_typing = isTyping;
+      const { conversation_id: conversationId, name, is_typing: isTyping } = action.payload;
+
+      if (state.messageTyping[conversationId]) {
+        state.messageTyping[conversationId].name = name;
+        state.messageTyping[conversationId].is_typing = isTyping;
+        state.messageTyping[conversationId].conversation_id = conversationId;
+      } else {
+        state.messageTyping[conversationId] = {
+          name,
+          conversation_id: conversationId,
+          is_typing: isTyping,
+        };
+      }
     },
-    resetMessageTyping: (state) => {
-      state.messageTyping.name = undefined;
-      state.messageTyping.is_typing = false;
-      state.messageTyping.group_id = undefined;
+    resetMessageTyping: (state, action) => {
+      const { conversation_id: conversationId } = action.payload;
+
+      if (state.messageTyping[conversationId]) {
+        state.messageTyping[conversationId].name = undefined;
+        state.messageTyping[conversationId].is_typing = false;
+        state.messageTyping[conversationId].conversation_id = undefined;
+      } else {
+        state.messageTyping[conversationId] = {
+          name: undefined,
+          conversation_id: undefined,
+          is_typing: false,
+        };
+      }
     },
   },
 });

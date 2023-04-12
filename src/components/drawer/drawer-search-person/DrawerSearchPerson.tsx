@@ -8,14 +8,14 @@ import DrawerHeader from '@/components/DrawerHeader';
 import { DrawerNavigationStackContext } from '@/context/DrawerNavigationStackContext';
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
 import { useAppDispatch, useAppSelector } from '@/hooks/use-dispatch-selector';
-import { asyncCreatePrivateGroup } from '@/redux-toolkit/feature/group/group.thunk';
 import { resetUserFilteredPhone } from '@/redux-toolkit/feature/user/user-filtered-phone.slice';
 import { asyncUserByPhone } from '@/redux-toolkit/feature/user/user.thunk';
 
 import DrawerChatTile from '../drawer-chat/DrawerChatTile';
+import { asyncCreatePrivateConversation } from '@/redux-toolkit/feature/group/conversation.thunk';
 
 function DrawerSearchPerson() {
-  const { setId } = useContext(SelectedChatListContext);
+  const { setConversationId } = useContext(SelectedChatListContext);
   const { popAll: closeAllStackDrawer } = useContext(DrawerNavigationStackContext);
 
   const [onLoadingCreatePrivateGroup, setOnLoadingCreatePrivateGroup] = useState(false);
@@ -77,11 +77,11 @@ function DrawerSearchPerson() {
               if (!group) {
                 try {
                   setOnLoadingCreatePrivateGroup(true);
-                  const result = await dispatch(asyncCreatePrivateGroup(user.id)).unwrap();
+                  const result = await dispatch(asyncCreatePrivateConversation(user.id)).unwrap();
 
                   // Close all stack drawer and set selected chat
                   closeAllStackDrawer();
-                  setId(result.data.id);
+                  setConversationId(result.data.id);
                 } catch (err) {
                   notifications.show({
                     title: 'Error',
@@ -93,7 +93,7 @@ function DrawerSearchPerson() {
                 }
               } else {
                 closeAllStackDrawer();
-                setId(group.id);
+                setConversationId(group.id);
               }
             }}
           />

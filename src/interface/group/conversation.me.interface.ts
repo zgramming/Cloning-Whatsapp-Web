@@ -1,10 +1,10 @@
-export interface MyGroupInterface {
+export interface MyConversationInterface {
   status: boolean;
   message: string;
-  data: MyGroup[];
+  data: MyConversation[];
 }
 
-export interface MyGroup {
+export interface MyConversation {
   id: string;
   name: string;
   code: string;
@@ -14,7 +14,7 @@ export interface MyGroup {
   last_sender: string;
   created_at: Date;
   updated_at: Date;
-  group_member: GroupMember[];
+  participants: Participant[];
   _count: Count;
   interlocutors?: Interlocutors;
 }
@@ -23,7 +23,7 @@ interface Count {
   contact: number;
 }
 
-interface GroupMember {
+interface Participant {
   user_id: string;
   user: Interlocutors;
 }

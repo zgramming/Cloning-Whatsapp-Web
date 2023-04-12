@@ -8,7 +8,7 @@ export interface ContactMe {
   id: string;
   owner_id: string;
   user_id: string;
-  group_id: string;
+  conversation_id: string;
   created_at: Date;
   updated_at: Date;
   user: User;

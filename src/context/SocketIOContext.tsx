@@ -6,19 +6,19 @@ import {
   BASE_URL_API,
   EMIT_EVENT_CONNECT,
   EMIT_EVENT_CUSTOM_DISCONNECT,
-  EMIT_EVENT_INVITE_NEW_GROUP,
+  EMIT_EVENT_INVITE_NEW_CONVERSATION,
   EMIT_EVENT_SEND_MESSAGE,
   EMIT_EVENT_TYPING,
 } from '@/utils/constant';
 
 export type EmitEventTypingType = {
   name: string;
-  group_id: string;
+  conversation_id: string;
   is_typing: boolean;
 };
 
-export type EmitEventInviteNewGroupType = {
-  group_id: string;
+export type EmitEventInviteNewConversationType = {
+  conversation_id: string;
   invited_by: string;
 };
 
@@ -27,10 +27,10 @@ type ContextType = {
   connect: (userId: string) => void;
   typing: (data: EmitEventTypingType) => void;
   sendMessage: (data: MessageCreateResponseInterface) => void;
-  inviteNewGroup: (data: EmitEventInviteNewGroupType) => void;
+  inviteNewConversation: (data: EmitEventInviteNewConversationType) => void;
   listenTyping: (callback: (data: EmitEventTypingType) => void) => void;
   listenSendMessage: (callback: (data: MessageCreateResponseInterface) => void) => void;
-  listenInviteNewGroup: (callback: (data: EmitEventInviteNewGroupType) => void) => void;
+  listenInviteNewConversation: (callback: (data: EmitEventInviteNewConversationType) => void) => void;
   disconnect: (userId: string) => void;
 };
 
@@ -39,10 +39,10 @@ const defaultValue: ContextType = {
   connect() {},
   typing() {},
   sendMessage() {},
-  inviteNewGroup() {},
+  inviteNewConversation() {},
   listenTyping() {},
   listenSendMessage() {},
-  listenInviteNewGroup() {},
+  listenInviteNewConversation() {},
   disconnect() {},
 };
 
@@ -84,9 +84,9 @@ function SocketIOProvider({ children }: any) {
           socket.emit(EMIT_EVENT_SEND_MESSAGE, data);
         }
       },
-      inviteNewGroup(data) {
+      inviteNewConversation(data) {
         if (socket) {
-          socket.emit(EMIT_EVENT_INVITE_NEW_GROUP, data);
+          socket.emit(EMIT_EVENT_INVITE_NEW_CONVERSATION, data);
         }
       },
       listenTyping(callback: (data: EmitEventTypingType) => void) {
@@ -99,9 +99,9 @@ function SocketIOProvider({ children }: any) {
           socket.on(EMIT_EVENT_SEND_MESSAGE, callback);
         }
       },
-      listenInviteNewGroup(callback) {
+      listenInviteNewConversation(callback) {
         if (socket && !alreadyConnect) {
-          socket.on(EMIT_EVENT_INVITE_NEW_GROUP, callback);
+          socket.on(EMIT_EVENT_INVITE_NEW_CONVERSATION, callback);
         }
       },
       disconnect(userId) {

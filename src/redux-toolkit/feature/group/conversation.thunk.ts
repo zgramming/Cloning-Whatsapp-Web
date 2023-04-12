@@ -1,5 +1,4 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { GroupCreateGroupGroupDTO } from '@/interface/group/dto/group.create-group-group.dto';
 import API from '@/utils/api';
 import { errorHandler } from '@/utils/error-handler';
 
@@ -10,14 +9,15 @@ import {
   setErrorMyGroup,
   setLoadingDetailGroup,
   setLoadingMyGroup,
-} from './group.slice';
+} from './conversation.slice';
+import { ConversationGroupCreateDTO } from '@/interface/group/dto/group.create-group-group.dto';
 
-export const asyncGroupDetail = createAsyncThunk(
-  'group/groupDetail',
+export const asyncConversationDetail = createAsyncThunk(
+  'conversation/conversationDetail',
   async (id: string, { dispatch, rejectWithValue }) => {
     try {
       dispatch(setLoadingDetailGroup(true));
-      const result = await API.getGroupDetail(id);
+      const result = await API.getConversationDetail(id);
       dispatch(initializeDetailGroup(result));
       return result;
     } catch (error) {
@@ -30,27 +30,30 @@ export const asyncGroupDetail = createAsyncThunk(
   },
 );
 
-export const asyncMyGroup = createAsyncThunk('group/myGroup', async (_, { dispatch, rejectWithValue }) => {
-  try {
-    dispatch(setLoadingMyGroup(true));
-    const result = await API.getMyGroup();
+export const asyncMyGroup = createAsyncThunk(
+  'conversation/myConversation',
+  async (_, { dispatch, rejectWithValue }) => {
+    try {
+      dispatch(setLoadingMyGroup(true));
+      const result = await API.getMyConversation();
 
-    dispatch(initializeMyGroup(result));
-    return result;
-  } catch (error) {
-    const err = errorHandler(error);
-    setErrorMyGroup(err.message);
-    return rejectWithValue(err.message);
-  } finally {
-    dispatch(setLoadingMyGroup(false));
-  }
-});
+      dispatch(initializeMyGroup(result));
+      return result;
+    } catch (error) {
+      const err = errorHandler(error);
+      setErrorMyGroup(err.message);
+      return rejectWithValue(err.message);
+    } finally {
+      dispatch(setLoadingMyGroup(false));
+    }
+  },
+);
 
-export const asyncCreatePrivateGroup = createAsyncThunk(
-  'group/createPrivateGroup',
+export const asyncCreatePrivateConversation = createAsyncThunk(
+  'conversation/createPrivateConversation',
   async (userId: string, { rejectWithValue }) => {
     try {
-      const result = await API.createPrivateGroup(userId);
+      const result = await API.createPrivateConversation(userId);
       return result;
     } catch (error) {
       const err = errorHandler(error);
@@ -59,9 +62,9 @@ export const asyncCreatePrivateGroup = createAsyncThunk(
   },
 );
 
-export const asyncCreateGroupGroup = createAsyncThunk(
-  'group/createGroupGroup',
-  async (data: GroupCreateGroupGroupDTO, { rejectWithValue }) => {
+export const asyncCreateGroupConversation = createAsyncThunk(
+  'conversation/createGroupConversation',
+  async (data: ConversationGroupCreateDTO, { rejectWithValue }) => {
     try {
       const { name, participants, avatar } = data;
 
@@ -76,7 +79,7 @@ export const asyncCreateGroupGroup = createAsyncThunk(
 
       if (avatar) formData.append('avatar', avatar);
 
-      const result = await API.createGroupGroup(formData);
+      const result = await API.createGroupConversation(formData);
       return result;
     } catch (error) {
       const err = errorHandler(error);

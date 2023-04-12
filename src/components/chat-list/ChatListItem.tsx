@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 
 import { SelectedChatListContext } from '@/context/SelectedChatListContext';
-import { MyGroup } from '@/interface/group/group.me.interface';
 import {
   BASE_URL_GROUP_PROFILE_IMAGE_API,
   BASE_URL_USER_PROFILE_IMAGE_API,
@@ -11,9 +10,10 @@ import {
 import ChatListItemAction from './ChatListItemAction';
 import ChatListItemAvatar from './ChatListItemAvatar';
 import ChatListItemMessage from './ChatListItemMessage';
+import { MyConversation } from '@/interface/group/conversation.me.interface';
 
 type OnRightClickType = {
-  group: MyGroup;
+  conversation: MyConversation;
   points: {
     x: number;
     y: number;
@@ -21,30 +21,32 @@ type OnRightClickType = {
 };
 
 type ChatListItemType = {
-  group: MyGroup;
+  conversation: MyConversation;
   onRightClick: (param: OnRightClickType) => void;
 };
 
-function ChatListItem({ group, onRightClick }: ChatListItemType) {
-  const { id, setId } = useContext(SelectedChatListContext);
+function ChatListItem({ conversation, onRightClick }: ChatListItemType) {
+  const { conversationId, setConversationId } = useContext(SelectedChatListContext);
 
-  const isGroup = group.type === 'GROUP';
+  const isGroup = conversation.type === 'GROUP';
 
   const srcAvatar = () => {
     if (isGroup) {
-      return group.avatar ? `${BASE_URL_GROUP_PROFILE_IMAGE_API}/${group.avatar}` : PATH_DEFAULT_ASSET_IMAGE;
+      return conversation.avatar
+        ? `${BASE_URL_GROUP_PROFILE_IMAGE_API}/${conversation.avatar}`
+        : PATH_DEFAULT_ASSET_IMAGE;
     }
 
-    return group.interlocutors?.avatar
-      ? `${BASE_URL_USER_PROFILE_IMAGE_API}/${group.interlocutors?.avatar}`
+    return conversation.interlocutors?.avatar
+      ? `${BASE_URL_USER_PROFILE_IMAGE_API}/${conversation.interlocutors?.avatar}`
       : PATH_DEFAULT_ASSET_IMAGE;
   };
 
-  const activeColor = id === group.id ? 'bg-green-50 dark:bg-slate-600' : '';
+  const activeColor = conversationId === conversation.id ? 'bg-green-50 dark:bg-slate-600' : '';
 
   return (
     <div
-      id={`chat-list-item-${group.id}`}
+      id={`chat-list-item-${conversation.id}`}
       role="presentation"
       className={`
         flex flex-row items-center px-3 py-5
@@ -53,18 +55,18 @@ function ChatListItem({ group, onRightClick }: ChatListItemType) {
         dark:hover:bg-slate-700
       `}
       onClick={() => {
-        setId(group.id);
+        setConversationId(conversation.id);
       }}
       onContextMenu={(e) => {
         e.preventDefault();
         onRightClick({
-          group,
+          conversation,
           points: { x: e.clientX, y: e.clientY },
         });
       }}
     >
       <ChatListItemAvatar avatar={srcAvatar()} />
-      <ChatListItemMessage group={group} />
+      <ChatListItemMessage conversation={conversation} />
       <ChatListItemAction />
     </div>
   );
