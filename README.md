@@ -22,7 +22,7 @@ Cloning Whatsapp Web
 - [x] Dynamic Theme (dark | light) mode
 - [x] Dynamic Walpapper Chat (custom color available)
 - [x] Realtime Chat
-- [x] Realtime indicator user is typing
+- [x] Realtime multiple listen indicator when user typing
 - [x] Realtime notify when user invited group
 
 ## Environment Variables
